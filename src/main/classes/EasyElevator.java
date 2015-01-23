@@ -1,14 +1,14 @@
 /**
  * Created by kroy on 1/23/2015.
  */
-package com.EE;
+package main.classes;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -269,8 +269,8 @@ public class EasyElevator
                         if (sign.getLine(0).equals(ChatColor.DARK_GRAY + "[EElevator]"))
                         {
                             boolean isPS = false;
-                            for (Elevator e : this.elevators) {
-                                if (e.getPlatform().getSign().equals(sign)) {
+                            for (Elevator e : this.elevators)
+                                if (e.getPlatform()getSign().equals(sign)) {
                                     isPS = true;
                                 }
                             }

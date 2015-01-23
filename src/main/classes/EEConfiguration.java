@@ -1,4 +1,4 @@
-package com.EE;
+package main.classes;
 
 import java.io.File;
 import java.io.PrintStream;

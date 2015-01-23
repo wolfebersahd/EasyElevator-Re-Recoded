@@ -1,18 +1,17 @@
-package com.EE;
+package main.classes;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javafx.application.Platform;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
 
 public class Elevator
         implements Runnable
@@ -513,7 +512,7 @@ public class Elevator
         if (next > this.floors.size()) {
             next = 1;
         }
-        this.platform.writeSign(1, next);
+        this.platform.writeSign(1, "next");
     }
 
     public int getFloorNumberFromHeight(int hight)

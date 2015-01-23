@@ -1,7 +1,9 @@
-package com.EE;
+package main.classes;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import main.classes.EasyElevator;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,7 +12,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
 public class Platform

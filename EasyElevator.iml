@@ -28,6 +28,7 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="library" name="net.md-5:nar-maven-plugin:3.0.0-SpigotMC-1" level="project" />
     <orderEntry type="library" name="net.ja731j.bukkit:bukkit-plugin-simple:1.0.0" level="project" />
+    <orderEntry type="library" name="java" level="project" />
     <orderEntry type="library" name="Maven: org.spigotmc:spigot-api:1.8-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
@@ -40,6 +41,5 @@
     <orderEntry type="library" name="Maven: net.md-5:bungeecord-chat:1.8-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.3" level="project" />
     <orderEntry type="library" name="Maven: org.bukkit:bukkit:1.8-R0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="java" level="project" />
   </component>
 </module>
