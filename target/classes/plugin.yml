@@ -1,0 +1,10 @@
+name: EasyElevator
+main: me.EasyElevator
+version: 1.2
+commands:
+  elv:
+    description: Elevator Commands
+    usage: /elv
+  eelevator:
+    description: Elevator Commands
+    usage: /eelevator
