@@ -1,4 +1,4 @@
-package me;
+package com.EE;
 
 import org.bukkit.entity.Player;
 

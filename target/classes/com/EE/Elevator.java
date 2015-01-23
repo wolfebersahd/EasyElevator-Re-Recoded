@@ -1,4 +1,4 @@
-package me;
+package com.EE;
 
 import java.io.PrintStream;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package me;
+package com.EE;
 
 import java.io.File;
 import java.io.PrintStream;
