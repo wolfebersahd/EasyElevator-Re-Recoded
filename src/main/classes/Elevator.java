@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javafx.application.Platform;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -676,7 +675,7 @@ public class Elevator
         for (int i = 0; i < this.floors.size(); i++) {
             if (curr != -1)
             {
-                ((Floor)this.floors.get(i)).writeSign(2, curr);
+                ((Floor)this.floors.get(i)).writeSign(2, ""+curr);
             }
             else
             {
@@ -690,7 +689,7 @@ public class Elevator
         }
         if (curr != -1)
         {
-            this.platform.writeSign(2, curr);
+            this.platform.writeSign(2, ""+ curr);
         }
         else
         {
@@ -703,7 +702,7 @@ public class Elevator
         }
         int next = getFloorNumberFromHeight(getNextFloorHeight());
         if (next != -1) {
-            this.platform.writeSign(3, next);
+            this.platform.writeSign(3,""+ next);
         } else {
             this.platform.writeSign(3, "-");
         }

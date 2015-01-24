@@ -270,11 +270,14 @@ public class EasyElevator
                         {
                             boolean isPS = false;
                             for (Elevator e : this.elevators)
-                                if (e.getPlatform()getSign().equals(sign)) {
+                            {
+                                if (e.getPlatform().getSign().equals(sign))
+                                {
                                     isPS = true;
                                 }
                             }
-                            if (!isPS) {
+                            if (!isPS)
+                            {
                                 return (org.bukkit.block.Sign)tempBlock.getState();
                             }
                         }
