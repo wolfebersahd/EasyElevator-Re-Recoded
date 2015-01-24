@@ -49,7 +49,7 @@ public class Floor
     private void initializeSign()
     {
         this.callSign.setLine(0, ChatColor.DARK_GRAY + "[EElevator]");
-        this.callSign.setLine(1, this.floor);
+        this.callSign.setLine(1, ""+ this.floor);
         this.callSign.update();
     }
 
