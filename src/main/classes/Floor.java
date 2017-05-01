@@ -335,7 +335,7 @@ public class Floor
         for (Block block : this.doorOpenBlock)
         {
             Location loc = block.getLocation();
-            loc.getWorld().playSound(loc, Sound.NOTE_PLING, 1.0F, 0.0F);
+            loc.getWorld().playSound(loc, Sound.BLOCK_NOTE_PLING, 1.0F, 0.0F);
         }
     }
 }

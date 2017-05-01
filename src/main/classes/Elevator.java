@@ -74,9 +74,11 @@ public class Elevator
                 i = this.world.getMaxHeight();
             }
         }
+
         if ((low == -1) || (high == -1)) {
             return;
         }
+
         this.highestPoint = high;
         this.lowestPoint = low;
 
