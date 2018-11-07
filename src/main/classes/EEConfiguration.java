@@ -48,7 +48,7 @@ public class EEConfiguration
                 this.config.set("Blocks.OutputDoor", "RED_WOOL");
                 this.config.set("Blocks.OutputFloor", "ORANGE_WOOL");
                 this.config.save(this.configFile);
-                Material.go
+               
             }
             catch (Exception e)
             {
