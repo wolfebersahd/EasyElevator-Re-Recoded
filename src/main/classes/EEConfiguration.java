@@ -2,6 +2,8 @@ package main.classes;
 
 import java.io.File;
 import java.io.PrintStream;
+
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class EEConfiguration
@@ -89,6 +91,7 @@ public class EEConfiguration
         this.config = loadConfig();
         if (this.config.contains("Blocks." + Block)) {
             return this.config.getString("Blocks." + Block);
+            
         }
         System.out.println("[EasyElevator] An error occured in your config. Please check for errors! (" + Block + ")");
         return "ERROR";

@@ -27,11 +27,11 @@ public class EasyElevator
     private int MaxFloors = 10;
     private boolean ArrivalSound = true;
     private boolean ArrivalMessage = true;
-    private String BlockBorder = "41";
-    private String BlockFloor = "42";
-    private String BlockOutputDoor = "35:14";
-    private String BlockOutputFloor = "35:1";
-
+    private String BlockBorder = "GOLD_BLOCK";
+    private String BlockFloor = "IRON_BLOCK";
+    private String BlockOutputDoor = "RED_WOOL";
+    private String BlockOutputFloor = "ORANGE_WOOL";
+    
     public EasyElevator() {}
 
     public void onEnable()
@@ -263,8 +263,8 @@ public class EasyElevator
                     z = k;
 
                     tempBlock = world.getBlockAt(x, y, z);
-                    if ((tempBlock.getType().equals(Material.WALL_SIGN)) || (tempBlock.getType().equals(Material.SIGN)) || (tempBlock.getType().equals(Material.SIGN_POST)))
-                    {
+                    if ((tempBlock.getType().equals(Material.WALL_SIGN)) || (tempBlock.getType().equals(Material.SIGN) ))
+                    { 
                         org.bukkit.block.Sign sign = (org.bukkit.block.Sign)tempBlock.getState();
                         if (sign.getLine(0).equals(ChatColor.DARK_GRAY + "[EElevator]"))
                         {

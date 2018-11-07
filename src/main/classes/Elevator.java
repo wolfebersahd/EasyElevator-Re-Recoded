@@ -778,25 +778,11 @@ public class Elevator
         try
         {
             String border = this.plugin.getBlockBorder();
-            int id = -1;
-            int data = -1;
-            if (border.contains(":"))
-            {
-                id = Integer.parseInt(border.split(":")[0]);
-                data = Integer.parseInt(border.split(":")[1]);
-            }
-            else
-            {
-                id = Integer.parseInt(border);
-            }
-            if (data != -1)
-            {
-                if ((data == b.getData()) && (id == b.getTypeId())) {
-                    return true;
-                }
-            }
-            else if (id == b.getTypeId()) {
-                return true;
+            Material m = Material.getMaterial(border);
+            if (m != null) {
+            	if (m == b.getType()) {
+            		return true;
+            	}
             }
         }
         catch (Exception localException) {}
@@ -807,26 +793,12 @@ public class Elevator
     {
         try
         {
-            String border = this.plugin.getBlockFloor();
-            int id = -1;
-            int data = -1;
-            if (border.contains(":"))
-            {
-                id = Integer.parseInt(border.split(":")[0]);
-                data = Integer.parseInt(border.split(":")[1]);
-            }
-            else
-            {
-                id = Integer.parseInt(border);
-            }
-            if (data != -1)
-            {
-                if ((data == b.getData()) && (id == b.getTypeId())) {
-                    return true;
-                }
-            }
-            else if (id == b.getTypeId()) {
-                return true;
+            String floor = this.plugin.getBlockFloor();
+            Material m = Material.getMaterial(floor);
+            if (m != null) {
+            	if (m == b.getType()) {
+            		return true;
+            	}
             }
         }
         catch (Exception localException) {}
@@ -837,26 +809,12 @@ public class Elevator
     {
         try
         {
-            String border = this.plugin.getBlockOutputFloor();
-            int id = -1;
-            int data = -1;
-            if (border.contains(":"))
-            {
-                id = Integer.parseInt(border.split(":")[0]);
-                data = Integer.parseInt(border.split(":")[1]);
-            }
-            else
-            {
-                id = Integer.parseInt(border);
-            }
-            if (data != -1)
-            {
-                if ((data == b.getData()) && (id == b.getTypeId())) {
-                    return true;
-                }
-            }
-            else if (id == b.getTypeId()) {
-                return true;
+            String outputFloor = this.plugin.getBlockOutputFloor();
+            Material m = Material.getMaterial(outputFloor);
+            if (m != null) {
+            	if (m == b.getType()) {
+            		return true;
+            	}
             }
         }
         catch (Exception localException) {}
@@ -867,26 +825,12 @@ public class Elevator
     {
         try
         {
-            String border = this.plugin.getBlockOutputDoor();
-            int id = -1;
-            int data = -1;
-            if (border.contains(":"))
-            {
-                id = Integer.parseInt(border.split(":")[0]);
-                data = Integer.parseInt(border.split(":")[1]);
-            }
-            else
-            {
-                id = Integer.parseInt(border);
-            }
-            if (data != -1)
-            {
-                if ((data == b.getData()) && (id == b.getTypeId())) {
-                    return true;
-                }
-            }
-            else if (id == b.getTypeId()) {
-                return true;
+            String outputDoor = this.plugin.getBlockOutputDoor();
+            Material m = Material.getMaterial(outputDoor);
+            if (m != null) {
+            	if (m == b.getType()) {
+            		return true;
+            	}
             }
         }
         catch (Exception localException) {}
