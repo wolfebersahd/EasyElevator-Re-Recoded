@@ -172,7 +172,7 @@ public class Floor
                             this.redstoneOutDoorBlock.add(tempBlock);
                         }
                     }
-                    else if ((this.elevator.isOutputDoor(tempBlock)) || (tempBlock.getType().equals(Material.LEGACY_REDSTONE_TORCH_ON))) {
+                    else if ((this.elevator.isOutputDoor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH))) {
                         if (this.redstoneOutDoorBlock.contains(tempBlock))
                         {
                             tempBlock.setType(this.OutputDoorMat);
