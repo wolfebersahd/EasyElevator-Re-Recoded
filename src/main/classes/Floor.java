@@ -10,9 +10,15 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Door;
+import org.bukkit.material.MaterialData;
+
+
 
 public class Floor
 {
@@ -162,7 +168,7 @@ public class Floor
                         if (this.elevator.isOutputDoor(tempBlock))
                         {
                             this.OutputDoorMat = tempBlock.getType();
-                            tempBlock.setType(Material.LEGACY_REDSTONE_TORCH_ON);
+                            tempBlock.setType(Material.REDSTONE_TORCH);
                             this.redstoneOutDoorBlock.add(tempBlock);
                         }
                     }
@@ -253,11 +259,23 @@ public class Floor
     public void OpenDoor()
     {
         switchRedstoneDoorOn(true);
-        for (Block block : this.doorOpenBlock) {
-        	Door d = (Door) block;
+        for (Block block : this.doorOpenBlock) { 
+        	BlockState bs = block.getState();
+        	BlockData bd = bs.getBlockData();
+        	Openable o = (Openable) bd;
+        	Door d = (Door) o;
         	if (!d.isOpen()) {
         		d.setOpen(true);
+        		bs.setBlockData(o);
+        		bs.update();
         	}
+//        	BlockState state = block.getState();
+//        	Openable openable = (Openable) state.getData();
+//        	openable.setOpen(true);
+//        	state.setData((MaterialData) openable);
+//        	state.update();
+//        	Door d = (Door) block.getState().getData();
+//        	d.setOpen(true);
             /*if (block.getData() <= 3) {
                 block.setData((byte)(block.getData() + 4));
             }*/
@@ -268,10 +286,23 @@ public class Floor
     public void CloseDoor()
     {
         for (Block block : this.doorOpenBlock) {
-            Door d = (Door) block;
-            if (d.isOpen()) {
-            	d.setOpen(false);
-            }
+        	BlockState bs = block.getState();
+        	BlockData bd = bs.getBlockData();
+        	Openable o = (Openable) bd;
+        	Door d = (Door) o;
+        	if (d.isOpen()) {
+        		d.setOpen(false);
+        		bs.setBlockData(o);
+        		bs.update();
+        	}
+//        	Openable openable = (Openable) state.getData();
+//        	openable.setOpen(false);
+//        	state.setData((MaterialData) openable);
+//        	state.update();
+//        	Door d = (Door) block.getState().getData();
+//            d.setOpen(false);
+            	
+            
         	/*if (block.getData() >= 4) {
                 block.setData((byte)(block.getData() - 4));
             }*/
