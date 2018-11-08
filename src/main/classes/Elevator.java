@@ -513,7 +513,7 @@ public class Elevator
         if (next > this.floors.size()) {
             next = 1;
         }
-        this.platform.writeSign(1, "next");
+        this.platform.writeSign(1, String.valueOf(next));
     }
 
     public int getFloorNumberFromHeight(int hight)
