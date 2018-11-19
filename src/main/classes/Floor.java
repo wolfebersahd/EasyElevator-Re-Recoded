@@ -10,7 +10,15 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Openable;
+import org.bukkit.block.data.type.Door;
+import org.bukkit.material.MaterialData;
+
+
 
 public class Floor
 {
@@ -26,7 +34,7 @@ public class Floor
     private Material OutputDoorMat = null;
     private byte OutputDoorData = 0;
     private Material OutputFloorMat = null;
-    private byte OutputFloorData = 0;
+    private BlockState OutputFloorData = null;
     private List<Block> doorOpenBlock = new ArrayList();
     private List<Block> redstoneOutDoorBlock = new ArrayList();
     private List<Block> redstoneOutFloorBlock = new ArrayList();
@@ -97,7 +105,13 @@ public class Floor
             {
                 Block tempBlock = this.world.getBlockAt(x, this.l1.getBlockY() + 1, z);
                 if ((x == xStart) || (x == xEnd) || (z == zStart) || (z == zEnd)) {
-                    if ((tempBlock.getType().equals(Material.WOODEN_DOOR)) || (tempBlock.getType().equals(Material.IRON_DOOR_BLOCK))) {
+                    if ((tempBlock.getType().equals(Material.ACACIA_DOOR)) || 
+                    	(tempBlock.getType().equals(Material.BIRCH_DOOR)) || 
+                    	(tempBlock.getType().equals(Material.DARK_OAK_DOOR)) ||
+                    	(tempBlock.getType().equals(Material.OAK_DOOR)) ||
+                    	(tempBlock.getType().equals(Material.JUNGLE_DOOR)) ||
+                    	(tempBlock.getType().equals(Material.SPRUCE_DOOR)) ||
+                    	(tempBlock.getType().equals(Material.IRON_DOOR))){
                         this.doorOpenBlock.add(tempBlock);
                     }
                 }
@@ -154,17 +168,14 @@ public class Floor
                         if (this.elevator.isOutputDoor(tempBlock))
                         {
                             this.OutputDoorMat = tempBlock.getType();
-                            this.OutputDoorData = tempBlock.getData();
-                            tempBlock.setType(Material.REDSTONE_TORCH_ON);
-                            tempBlock.setData((byte)5);
+                            tempBlock.setType(Material.REDSTONE_TORCH);
                             this.redstoneOutDoorBlock.add(tempBlock);
                         }
                     }
-                    else if ((this.elevator.isOutputDoor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH_ON))) {
+                    else if ((this.elevator.isOutputDoor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH))) {
                         if (this.redstoneOutDoorBlock.contains(tempBlock))
                         {
                             tempBlock.setType(this.OutputDoorMat);
-                            tempBlock.setData(this.OutputDoorData);
                             this.redstoneOutDoorBlock.remove(tempBlock);
                         }
                     }
@@ -225,17 +236,15 @@ public class Floor
                         if (this.elevator.isOutputFloor(tempBlock))
                         {
                             this.OutputFloorMat = tempBlock.getType();
-                            this.OutputFloorData = tempBlock.getData();
-                            tempBlock.setType(Material.REDSTONE_TORCH_ON);
-                            tempBlock.setData((byte)5);
+                            tempBlock.setType(Material.REDSTONE_TORCH);
                             this.redstoneOutFloorBlock.add(tempBlock);
+                            
                         }
                     }
-                    else if ((this.elevator.isOutputFloor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH_ON))) {
+                    else if ((this.elevator.isOutputFloor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH))) {
                         if (this.redstoneOutFloorBlock.contains(tempBlock))
                         {
                             tempBlock.setType(this.OutputFloorMat);
-                            tempBlock.setData(this.OutputFloorData);
                             this.redstoneOutFloorBlock.remove(tempBlock);
                         }
                     }
@@ -250,10 +259,26 @@ public class Floor
     public void OpenDoor()
     {
         switchRedstoneDoorOn(true);
-        for (Block block : this.doorOpenBlock) {
-            if (block.getData() <= 3) {
+        for (Block block : this.doorOpenBlock) { 
+        	BlockState bs = block.getState();
+        	BlockData bd = bs.getBlockData();
+        	Openable o = (Openable) bd;
+        	Door d = (Door) o;
+        	if (!d.isOpen()) {
+        		d.setOpen(true);
+        		bs.setBlockData(o);
+        		bs.update();
+        	}
+//        	BlockState state = block.getState();
+//        	Openable openable = (Openable) state.getData();
+//        	openable.setOpen(true);
+//        	state.setData((MaterialData) openable);
+//        	state.update();
+//        	Door d = (Door) block.getState().getData();
+//        	d.setOpen(true);
+            /*if (block.getData() <= 3) {
                 block.setData((byte)(block.getData() + 4));
-            }
+            }*/
         }
         this.hasOpenDoors = true;
     }
@@ -261,9 +286,26 @@ public class Floor
     public void CloseDoor()
     {
         for (Block block : this.doorOpenBlock) {
-            if (block.getData() >= 4) {
+        	BlockState bs = block.getState();
+        	BlockData bd = bs.getBlockData();
+        	Openable o = (Openable) bd;
+        	Door d = (Door) o;
+        	if (d.isOpen()) {
+        		d.setOpen(false);
+        		bs.setBlockData(o);
+        		bs.update();
+        	}
+//        	Openable openable = (Openable) state.getData();
+//        	openable.setOpen(false);
+//        	state.setData((MaterialData) openable);
+//        	state.update();
+//        	Door d = (Door) block.getState().getData();
+//            d.setOpen(false);
+            	
+            
+        	/*if (block.getData() >= 4) {
                 block.setData((byte)(block.getData() - 4));
-            }
+            }*/
         }
         this.hasOpenDoors = false;
         switchRedstoneDoorOn(false);
@@ -335,7 +377,7 @@ public class Floor
         for (Block block : this.doorOpenBlock)
         {
             Location loc = block.getLocation();
-            loc.getWorld().playSound(loc, Sound.BLOCK_NOTE_PLING, 1.0F, 0.0F);
+            loc.getWorld().playSound(loc, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 0.0F);
         }
     }
 }

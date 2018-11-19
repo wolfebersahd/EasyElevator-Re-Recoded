@@ -2,6 +2,8 @@ package main.classes;
 
 import java.io.File;
 import java.io.PrintStream;
+
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class EEConfiguration
@@ -41,11 +43,12 @@ public class EEConfiguration
                 this.config.set("MaxFloors", Integer.valueOf(10));
                 this.config.set("Arrival.Sound", Boolean.valueOf(true));
                 this.config.set("Arrival.Message", Boolean.valueOf(true));
-                this.config.set("Blocks.Border", "41");
-                this.config.set("Blocks.Floor", "42");
-                this.config.set("Blocks.OutputDoor", "35:14");
-                this.config.set("Blocks.OutputFloor", "35:1");
+                this.config.set("Blocks.Border", "GOLD_BLOCK");
+                this.config.set("Blocks.Floor", "IRON_BLOCK");
+                this.config.set("Blocks.OutputDoor", "RED_WOOL");
+                this.config.set("Blocks.OutputFloor", "ORANGE_WOOL");
                 this.config.save(this.configFile);
+               
             }
             catch (Exception e)
             {
@@ -89,6 +92,7 @@ public class EEConfiguration
         this.config = loadConfig();
         if (this.config.contains("Blocks." + Block)) {
             return this.config.getString("Blocks." + Block);
+            
         }
         System.out.println("[EasyElevator] An error occured in your config. Please check for errors! (" + Block + ")");
         return "ERROR";

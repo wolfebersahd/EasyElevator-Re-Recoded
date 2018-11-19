@@ -10,7 +10,10 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -105,7 +108,7 @@ public class Platform
                 {
                     Block tempBlock = this.world.getBlockAt(x, i, z);
                     Block signBlock = this.world.getBlockAt(x, i + 2, z);
-                    if (tempBlock.getTypeId() == 43)
+                    if (tempBlock.getType() == Material.STONE_SLAB)
                     {
                         this.platform.add(tempBlock);
                         if ((signBlock.getState() instanceof Sign)) {
@@ -146,10 +149,15 @@ public class Platform
                 for (int i = 0; i < this.platform.size(); i++)
                 {
                     Block b = (Block)this.platform.get(i);
-                    b.setTypeId(0);
+                    b.setType(Material.AIR);
                     b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() - 1, b.getLocation().getBlockZ());
-                    b.setTypeId(43);
-                    b.setData((byte)0);
+                    b.setType(Material.STONE_SLAB);
+                    BlockState bs = b.getState();
+                    BlockData bd = bs.getBlockData();
+                    Slab s = (Slab) bd;
+                    s.setType(Slab.Type.DOUBLE);
+                    bs.setBlockData(s);
+                    bs.update();
                     this.platform.remove(i);
                     this.platform.add(i, b);
                     this.l1.setY(b.getLocation().getBlockY());
@@ -181,10 +189,15 @@ public class Platform
                 for (int i = 0; i < this.platform.size(); i++)
                 {
                     Block b = (Block)this.platform.get(i);
-                    b.setTypeId(0);
+                    b.setType(Material.AIR);
                     b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() + 1, b.getLocation().getBlockZ());
-                    b.setTypeId(43);
-                    b.setData((byte)0);
+                    b.setType(Material.STONE_SLAB);
+                    BlockState bs = b.getState();
+                    BlockData bd = bs.getBlockData();
+                    Slab s = (Slab) bd;
+                    s.setType(Slab.Type.DOUBLE);
+                    bs.setBlockData(s);
+                    bs.update();
                     this.platform.remove(i);
                     this.platform.add(i, b);
                     this.l1.setY(b.getLocation().getBlockY());
@@ -244,7 +257,7 @@ public class Platform
         nSign.setLine(2, this.platformSign.getLine(2));
         nSign.setLine(3, this.platformSign.getLine(3));
         nSign.update();
-        this.platformSign.getBlock().setTypeId(0);
+        this.platformSign.getBlock().setType(Material.AIR);
         this.platformSign = nSign;
     }
 

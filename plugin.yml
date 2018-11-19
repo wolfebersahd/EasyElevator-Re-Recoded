@@ -1,6 +1,7 @@
 name: EasyElevator
 main: main.classes.EasyElevator
 version: 2.0
+api-version: 1.13
 commands:
   elv:
     description: Elevator Commands
