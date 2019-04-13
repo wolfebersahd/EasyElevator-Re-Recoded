@@ -1,4 +1,4 @@
-package main.classes;
+package dzjkb.EasyElevator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -9,31 +9,33 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.Material;
 
 public class EEPlayerListener
         implements Listener
 {
-    EasyElevator plugin;
+    EasyElevator ee;
 
-    public EEPlayerListener(EasyElevator pl)
+    public EEPlayerListener(EasyElevator e)
     {
-        this.plugin = pl;
+        this.ee = e;
     }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
-        {
+        Block clicked = event.getClickedBlock();
+
+        if (clicked.getType() == Material.SIGN) {
             Player player = event.getPlayer();
             EEPermissionManager pm = new EEPermissionManager(player);
-            Block clicked = event.getClickedBlock();
-            if ((clicked.getState() instanceof Sign))
-            {
-                Sign sign = (Sign)clicked.getState();
-                Elevator e = this.plugin.getElevator(sign);
-                if (e != null)
-                {
+            Sign sign = (Sign)clicked.getState();
+
+            Elevator e = this.ee.getElevator(sign);
+
+            // TODO
+            if (e != null) {
+                if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     if ((pm.has("easyelevator.call.sign")) || (pm.has("easyelevator.call.*"))) {
                         if (e.isFloorSign(sign))
                         {
@@ -48,18 +50,8 @@ public class EEPlayerListener
                         return;
                     }
                 }
-            }
-        }
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK)
-        {
-            Player player = event.getPlayer();
-            EEPermissionManager pm = new EEPermissionManager(player);
-            Block clicked = event.getClickedBlock();
-            if ((clicked.getState() instanceof Sign))
-            {
-                Sign sign = (Sign)clicked.getState();
-                Elevator e = this.plugin.getElevator(sign);
-                if (e != null) {
+
+                if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                     if ((pm.has("easyelevator.stop.sign")) || (pm.has("easyelevator.stop.*")))
                     {
                         if (e.isPlatformSign(sign))

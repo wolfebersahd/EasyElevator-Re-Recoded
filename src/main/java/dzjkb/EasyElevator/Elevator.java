@@ -1,4 +1,4 @@
-package main.classes;
+package dzjkb.EasyElevator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
