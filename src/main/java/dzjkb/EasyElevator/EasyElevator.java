@@ -7,17 +7,29 @@ import org.bukkit.ChatColor;
 
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.command.CommandExecutor;
+
+import dzjkb.EasyElevator.EECommands;
+import dzjkb.EasyElevator.EEConfigurationManager;
+import dzjkb.EasyElevator.EEPlayerListener;
 
 public class EasyElevator
         extends JavaPlugin
 {
-    private EEConfiguration config = new EEConfiguration(this);
+    private EEConfigurationManager configManager = new EEConfigurationManager(this);
+    private EEConfiguration config;
+    private EECommands cmd;
+    private EEPlayerListener playerListener;
     private List<Elevator> elevators = new ArrayList<>();
     
     public EasyElevator() {}
 
     public void onEnable() {
-        getServer().getPluginManager().registerEvents(new EEPlayerListener(this), this);
+        this.cmd = new EECommands(this);
+        this.playerListener = new EEPlayerListener(this);
+        this.getCommand("elv").setExecutor(this.cmd);
+        this.getCommand("eelevator").setExecutor(this.cmd);
+        this.getServer().getPluginManager().registerEvents(this.playerListener, this);
         reloadConfig();
     }
 
@@ -30,48 +42,10 @@ public class EasyElevator
     }
 
     public void reloadConfig() {
-        this.config.loadConfig();
-    }
+        this.config = this.configManager.loadConfig();
 
-
-    public int getMaxPerimeter()
-    {
-        return this.config.maxPerimeter;
-    }
-
-    public int getMaxFloors()
-    {
-        return this.config.maxFloors;
-    }
-
-    public boolean getArrivalSound()
-    {
-        return this.config.playArrivalSound;
-    }
-
-    public boolean getArrivalMessage()
-    {
-        return this.config.sendArrivalMessage;
-    }
-
-    public String getBlockBorder()
-    {
-        return this.config.blockBorder;
-    }
-
-    public String getBlockFloor()
-    {
-        return this.config.blockFloor;
-    }
-
-    public String getBlockOutputDoor()
-    {
-        return this.config.blockOutputDoor;
-    }
-
-    public String getBlockOutputFloor()
-    {
-        return this.config.blockOutputFloor;
+        // Propagate the config change to any classes that need it
+        // playerListener, elevators
     }
 
     public List<Elevator> getElevators() {

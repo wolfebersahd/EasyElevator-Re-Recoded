@@ -10,15 +10,21 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+
+import dzjkb.EasyElevator.EEConfiguration;
 
 public class Elevator
         implements Runnable
 {
-    public EasyElevator plugin;
-    private org.bukkit.block.Sign s;
-    private Block attached;
+    // public EasyElevator plugin;
+    private EEConfiguration cfg;
+    private EasyElevator plugin;
     private World world;
+
+    private Sign sign;
+    private Block attached;
     private int highestPoint;
     private int lowestPoint;
     private int xLow;
@@ -27,22 +33,25 @@ public class Elevator
     private int zHigh;
     private int maxFloors = -1;
     private int maxPerimeter = -1;
-    private List<Integer> stops = new ArrayList();
+
+    private List<Floor> floors = new ArrayList<Floor>();
     public Floor currentFloor = null;
-    private String Direction = "";
+    private Platform platform;
+
+    private List<Integer> stops = new ArrayList<Integer>();
+    private String direction = "";
     private boolean isMoving = false;
     private boolean hasOpenDoor = false;
     private boolean isInitialized = false;
-    private List<Floor> floors = new ArrayList();
-    private Platform platform;
 
-    public Elevator(EasyElevator elev, org.bukkit.block.Sign s)
+    public Elevator(EasyElevator p, EEConfiguration cfg, Sign s)
     {
-        this.plugin = elev;
+        this.cfg = cfg;
+        this.plugin = p;
         this.world = s.getWorld();
-        this.s = s;
-        this.maxFloors = elev.getMaxFloors();
-        this.maxPerimeter = elev.getMaxPerimeter();
+        this.sign = s;
+        this.maxFloors = cfg.maxFloors;
+        this.maxPerimeter = cfg.maxPerimeter;
 
         org.bukkit.material.Sign signData = (org.bukkit.material.Sign)s.getData();
         this.attached = s.getBlock().getRelative(signData.getAttachedFace());
@@ -56,22 +65,19 @@ public class Elevator
 
         int low = -1;
         int high = -1;
-        for (int i = this.s.getY(); i >= 0; i--)
-        {
+        for (int i = this.sign.getY(); i >= 0; i--) {
             Block b = this.world.getBlockAt(this.attached.getLocation().getBlockX(), i, this.attached.getLocation().getBlockZ());
-            if (isBorder(b))
-            {
+            if (isBorder(b)) {
                 low = i;
-                i = -1;
+                break;
             }
         }
-        for (int i = this.s.getY(); i < this.world.getMaxHeight(); i++)
-        {
+
+        for (int i = this.sign.getY(); i < this.world.getMaxHeight(); i++) {
             Block b = this.world.getBlockAt(this.attached.getLocation().getBlockX(), i, this.attached.getLocation().getBlockZ());
-            if (isBorder(b))
-            {
+            if (isBorder(b)) {
                 high = i;
-                i = this.world.getMaxHeight();
+                break;
             }
         }
 
@@ -94,8 +100,8 @@ public class Elevator
 
                 String dir = "";
 
-                List<Block> blocks = new ArrayList();
-                Block Start = target;
+                List<Block> blocks = new ArrayList<Block>();
+                Block start = target;
                 Block t = null;
 
                 b2 = null;
@@ -107,7 +113,7 @@ public class Elevator
                     {
                         if (temp == null)
                         {
-                            temp = checkForIron(Start, Start.getRelative(0, 0, 1), blocks);
+                            temp = checkForIron(start, start.getRelative(0, 0, 1), blocks);
                             if (temp != null)
                             {
                                 t = temp;
@@ -119,7 +125,7 @@ public class Elevator
                         }
                         if (temp == null)
                         {
-                            temp = checkForIron(Start, Start.getRelative(0, 0, -1), blocks);
+                            temp = checkForIron(start, start.getRelative(0, 0, -1), blocks);
                             if (temp != null)
                             {
                                 t = temp;
@@ -131,7 +137,7 @@ public class Elevator
                         }
                         if (temp == null)
                         {
-                            temp = checkForIron(Start, Start.getRelative(1, 0, 0), blocks);
+                            temp = checkForIron(start, start.getRelative(1, 0, 0), blocks);
                             if (temp != null)
                             {
                                 t = temp;
@@ -143,7 +149,7 @@ public class Elevator
                         }
                         if (temp == null)
                         {
-                            temp = checkForIron(Start, Start.getRelative(-1, 0, 0), blocks);
+                            temp = checkForIron(start, start.getRelative(-1, 0, 0), blocks);
                             if (temp != null)
                             {
                                 t = temp;
@@ -158,7 +164,7 @@ public class Elevator
                     {
                         if (temp == null)
                         {
-                            temp = checkForIron(Start, t.getRelative(0, 0, 1), blocks);
+                            temp = checkForIron(start, t.getRelative(0, 0, 1), blocks);
                             if (temp != null)
                             {
                                 t = temp;
@@ -170,7 +176,7 @@ public class Elevator
                         }
                         if (temp == null)
                         {
-                            temp = checkForIron(Start, t.getRelative(0, 0, -1), blocks);
+                            temp = checkForIron(start, t.getRelative(0, 0, -1), blocks);
                             if (temp != null)
                             {
                                 t = temp;
@@ -182,7 +188,7 @@ public class Elevator
                         }
                         if (temp == null)
                         {
-                            temp = checkForIron(Start, t.getRelative(1, 0, 0), blocks);
+                            temp = checkForIron(start, t.getRelative(1, 0, 0), blocks);
                             if (temp != null)
                             {
                                 t = temp;
@@ -194,7 +200,7 @@ public class Elevator
                         }
                         if (temp == null)
                         {
-                            temp = checkForIron(Start, t.getRelative(-1, 0, 0), blocks);
+                            temp = checkForIron(start, t.getRelative(-1, 0, 0), blocks);
                             if (temp != null)
                             {
                                 t = temp;
@@ -219,7 +225,7 @@ public class Elevator
                         }
                     }
                     blocks.add(temp);
-                } while (!Start.equals(t));
+                } while (!start.equals(t));
                 if (blocks.size() > this.maxPerimeter) {
                     return;
                 }
@@ -231,7 +237,7 @@ public class Elevator
                     if ((dirChange != 4) && (dirChange != 3)) {
                         return;
                     }
-                    org.bukkit.block.Sign callSign = getCallSign(b1.getLocation(), b2.getLocation());
+                    Sign callSign = getCallSign(b1.getLocation(), b2.getLocation());
                     if (callSign != null)
                     {
                         Floor floor = new Floor(this, b1.getLocation(), b2.getLocation(), callSign, count + 1);
@@ -256,7 +262,7 @@ public class Elevator
         System.out.println("[EasyElevator] An elevator has been initialized");
     }
 
-    private org.bukkit.block.Sign getCallSign(Location l1, Location l2)
+    private Sign getCallSign(Location l1, Location l2)
     {
         BlockFace[] faces = new BlockFace[4];
         faces[0] = BlockFace.NORTH;
@@ -266,70 +272,29 @@ public class Elevator
 
         int x1 = l1.getBlockX();
         int z1 = l1.getBlockZ();
-
         int x2 = l2.getBlockX();
         int z2 = l2.getBlockZ();
 
-        int xStart = 0;int xEnd = 0;int zStart = 0;int zEnd = 0;
-        if (x1 < x2)
-        {
-            xStart = x1;
-            xEnd = x2;
-        }
-        if (x1 > x2)
-        {
-            xStart = x2;
-            xEnd = x1;
-        }
-        if (x1 == x2)
-        {
-            xStart = x1;
-            xEnd = x1;
-        }
-        if (z1 < z2)
-        {
-            zStart = z1;
-            zEnd = z2;
-        }
-        if (z1 > z2)
-        {
-            zStart = z2;
-            zEnd = z1;
-        }
-        if (z1 == z2)
-        {
-            zStart = z1;
-            zEnd = z1;
-        }
+        int xStart = Math.min(x1, x2) - 1;
+        int xEnd = Math.max(x1, x2) + 1;
+        int zStart = Math.min(z1, z2) - 1;
+        int zEnd = Math.max(z1, z2) + 1;
+
         this.xLow = xStart;
         this.xHigh = xEnd;
         this.zLow = zStart;
         this.zHigh = zEnd;
 
-        xStart--;
-        xEnd++;
-
-        zStart--;
-        zEnd++;
-        for (int i = l1.getBlockY() + 2; i <= l1.getBlockY() + 3; i++) {
+        for (int y = l1.getBlockY() + 2; y <= l1.getBlockY() + 3; y++) {
             for (int x = xStart; x <= xEnd; x++) {
                 for (int z = zStart; z <= zEnd; z++)
                 {
-                    Block tempBlock = this.world.getBlockAt(x, i, z);
-                    if ((x == xStart) || (x == xEnd))
-                    {
-                        if (tempBlock.getType().equals(Material.WALL_SIGN))
-                        {
-                            org.bukkit.block.Sign sign = (org.bukkit.block.Sign)tempBlock.getState();
-                            return sign;
-                        }
-                    }
-                    else if ((z == zStart) || (z == zEnd)) {
-                        if (tempBlock.getType().equals(Material.WALL_SIGN))
-                        {
-                            org.bukkit.block.Sign sign = (org.bukkit.block.Sign)tempBlock.getState();
-                            return sign;
-                        }
+                    Block b = this.world.getBlockAt(x, y, z);
+                    if (
+                        b.getType().equals(Material.WALL_SIGN) &&
+                        ((x == xStart || x == xEnd) || (z == zStart || z == zEnd))
+                    ) {
+                        return (Sign)b.getState();
                     }
                 }
             }
@@ -337,36 +302,38 @@ public class Elevator
         return null;
     }
 
-    private boolean dirChanged(String dir, String newDir)
-    {
-        if (dir.equals("")) {
-            return false;
-        }
-        if (dir.equals(newDir)) {
-            return false;
-        }
-        return true;
+    private boolean dirChanged(String dir, String newDir) {
+        return !dir.equals("") && !dir.equals(newDir);
     }
 
-    private Block checkForIron(Block Start, Block t, List<Block> blocks)
+    private Block checkForIron(Block start, Block t, List<Block> blocks)
     {
-        if ((isFloor(t)) || (isOutputDoor(t)) || (isOutputFloor(t)))
-        {
-            if ((Start.equals(t)) && (blocks.size() <= 4)) {
-                return null;
-            }
-            if (!blocks.contains(t)) {
-                return t;
-            }
-        }
+        // if (isFloor(t) || isOutputDoor(t) || isOutputFloor(t))
+        // {
+        //     if (start.equals(t) && blocks.size() <= 4) {
+        //         return null;
+        //     }
+        //     if (!blocks.contains(t)) {
+        //         return t;
+        //     }
+        // }
+        // return null;
+
+        if (
+            (isFloor(t) || isOutputDoor(t) || isOutputFloor(t)) &&
+            !blocks.contains(t) &&
+            !(start.equals(t) && blocks.size() <= 4)
+        )
+            return t;
+
         return null;
     }
 
-    public void addStops(int Floor)
+    public void addStops(int floor)
     {
         int height = -1;
         for (int i = 0; i < this.floors.size(); i++) {
-            if (((Floor)this.floors.get(i)).getFloor() == Floor) {
+            if (((Floor)this.floors.get(i)).getFloor() == floor) {
                 height = ((Floor)this.floors.get(i)).getHeight();
             }
         }
@@ -440,7 +407,7 @@ public class Elevator
                     }
                     if (this.currentFloor != null)
                     {
-                        if (this.plugin.getArrivalSound()) {
+                        if (this.cfg.playArrivalSound) {
                             this.currentFloor.playOpenSound();
                         }
                         this.currentFloor.switchRedstoneFloorOn(true);
@@ -453,31 +420,31 @@ public class Elevator
                 }
                 else
                 {
-                    if (!this.Direction.equals("")) {
+                    if (!this.direction.equals("")) {
                         if (this.currentFloor != null)
                         {
                             this.currentFloor.switchRedstoneFloorOn(false);
                             this.currentFloor = null;
                         }
                     }
-                    if (this.Direction.equals("DOWN"))
+                    if (this.direction.equals("DOWN"))
                     {
                         this.platform.moveDown(this.lcount);
                         this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
                         this.lcount += 1;
                     }
-                    else if (!this.Direction.equals("UP"))
+                    else if (!this.direction.equals("UP"))
                     {
                         this.isMoving = false;
                         return;
                     }
-                    if (this.Direction.equals("UP"))
+                    if (this.direction.equals("UP"))
                     {
                         this.platform.moveUp(this.lcount);
                         this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
                         this.lcount += 1;
                     }
-                    else if (!this.Direction.equals("DOWN"))
+                    else if (!this.direction.equals("DOWN"))
                     {
                         this.isMoving = false;
                     }
@@ -485,10 +452,10 @@ public class Elevator
             }
             else
             {
-                if (this.Direction.equals("UP")) {
-                    this.Direction = "DOWN";
+                if (this.direction.equals("UP")) {
+                    this.direction = "DOWN";
                 } else {
-                    this.Direction = "UP";
+                    this.direction = "UP";
                 }
                 this.stops.clear();
                 addStops(getFloorNumberFromHeight(getNextFloorHeight_2()));
@@ -531,7 +498,7 @@ public class Elevator
     {
         int next = -1;
         int current = this.platform.getHeight();
-        if (this.Direction.equals("UP"))
+        if (this.direction.equals("UP"))
         {
             for (int i = 0; i < this.floors.size(); i++)
             {
@@ -546,7 +513,7 @@ public class Elevator
             }
             return next;
         }
-        if (this.Direction.equals("DOWN"))
+        if (this.direction.equals("DOWN"))
         {
             for (int i = 0; i < this.floors.size(); i++)
             {
@@ -561,7 +528,7 @@ public class Elevator
             }
             return next;
         }
-        if (this.Direction.equals("")) {
+        if (this.direction.equals("")) {
             return this.platform.getHeight();
         }
         return -1;
@@ -573,7 +540,7 @@ public class Elevator
         {
             int next = -1;
             int current = this.currentFloor.getHeight();
-            if (this.Direction.equals("UP")) {
+            if (this.direction.equals("UP")) {
                 for (int i = 0; i < this.stops.size(); i++)
                 {
                     int t = ((Integer)this.stops.get(i)).intValue();
@@ -586,7 +553,7 @@ public class Elevator
                     }
                 }
             }
-            if (this.Direction.equals("DOWN")) {
+            if (this.direction.equals("DOWN")) {
                 for (int i = 0; i < this.stops.size(); i++)
                 {
                     int t = ((Integer)this.stops.get(i)).intValue();
@@ -631,43 +598,43 @@ public class Elevator
     private void updateDirection()
     {
         int height = this.platform.getHeight();
-        for (Iterator localIterator = this.stops.iterator(); localIterator.hasNext();)
+        for (Iterator<Integer> localIterator = this.stops.iterator(); localIterator.hasNext();)
         {
-            int i = ((Integer)localIterator.next()).intValue();
-            if (this.Direction.equals("DOWN")) {
+            int i = localIterator.next().intValue();
+            if (this.direction.equals("DOWN")) {
                 if (i < height) {
                     return;
                 }
             }
-            if (this.Direction.equals("UP")) {
+            if (this.direction.equals("UP")) {
                 if (i > height) {
                     return;
                 }
             }
-            if (this.Direction.equals(""))
+            if (this.direction.equals(""))
             {
                 if (i > height) {
-                    this.Direction = "UP";
+                    this.direction = "UP";
                 } else {
-                    this.Direction = "DOWN";
+                    this.direction = "DOWN";
                 }
                 return;
             }
         }
         if (this.stops.size() > 0)
         {
-            if (this.Direction.equals("DOWN"))
+            if (this.direction.equals("DOWN"))
             {
-                this.Direction = "UP";
+                this.direction = "UP";
                 return;
             }
-            if (this.Direction.equals("UP")) {
-                this.Direction = "DOWN";
+            if (this.direction.equals("UP")) {
+                this.direction = "DOWN";
             }
         }
         else
         {
-            this.Direction = "";
+            this.direction = "";
         }
     }
 
@@ -681,10 +648,10 @@ public class Elevator
             }
             else
             {
-                if (this.Direction.equals("UP")) {
+                if (this.direction.equals("UP")) {
                     ((Floor)this.floors.get(i)).writeSign(2, "/\\");
                 }
-                if (this.Direction.equals("DOWN")) {
+                if (this.direction.equals("DOWN")) {
                     ((Floor)this.floors.get(i)).writeSign(2, "\\/");
                 }
             }
@@ -695,10 +662,10 @@ public class Elevator
         }
         else
         {
-            if (this.Direction.equals("UP")) {
+            if (this.direction.equals("UP")) {
                 this.platform.writeSign(2, "/\\");
             }
-            if (this.Direction.equals("DOWN")) {
+            if (this.direction.equals("DOWN")) {
                 this.platform.writeSign(2, "\\/");
             }
         }
@@ -727,10 +694,13 @@ public class Elevator
         int x = loc.getBlockX();
         int y = loc.getBlockY();
         int z = loc.getBlockZ();
-        if ((y > this.lowestPoint) && (y < this.highestPoint) && (x >= this.xLow) && (x <= this.xHigh) && (z >= this.zLow) && (z <= this.zHigh)) {
-            return true;
-        }
-        return false;
+        return
+            (y > this.lowestPoint) &&
+            (y < this.highestPoint) &&
+            (x >= this.xLow) &&
+            (x <= this.xHigh) &&
+            (z >= this.zLow) &&
+            (z <= this.zHigh);
     }
 
     public boolean isFloorSign(org.bukkit.block.Sign sign)
@@ -773,67 +743,33 @@ public class Elevator
         return this.floors;
     }
 
-    public boolean isBorder(Block b)
-    {
-        try
-        {
-            String border = this.plugin.getBlockBorder();
-            Material m = Material.getMaterial(border);
-            if (m != null) {
-            	if (m == b.getType()) {
-            		return true;
-            	}
-            }
-        }
-        catch (Exception localException) {}
-        return false;
+    public boolean isBorder(Block b) {
+        return checkMaterial(b, this.cfg.blockBorder);
     }
 
-    public boolean isFloor(Block b)
-    {
-        try
-        {
-            String floor = this.plugin.getBlockFloor();
-            Material m = Material.getMaterial(floor);
-            if (m != null) {
-            	if (m == b.getType()) {
-            		return true;
-            	}
-            }
-        }
-        catch (Exception localException) {}
-        return false;
+    public boolean isFloor(Block b) {
+        return checkMaterial(b, this.cfg.blockFloor);
     }
 
-    public boolean isOutputFloor(Block b)
-    {
-        try
-        {
-            String outputFloor = this.plugin.getBlockOutputFloor();
-            Material m = Material.getMaterial(outputFloor);
-            if (m != null) {
-            	if (m == b.getType()) {
-            		return true;
-            	}
-            }
-        }
-        catch (Exception localException) {}
-        return false;
+    public boolean isOutputFloor(Block b) {
+        return checkMaterial(b, this.cfg.blockOutputFloor);
     }
 
-    public boolean isOutputDoor(Block b)
-    {
+    public boolean isOutputDoor(Block b) {
+        return checkMaterial(b, this.cfg.blockOutputDoor);
+    }
+
+    private boolean checkMaterial(Block b, String material) {
         try
         {
-            String outputDoor = this.plugin.getBlockOutputDoor();
-            Material m = Material.getMaterial(outputDoor);
-            if (m != null) {
-            	if (m == b.getType()) {
-            		return true;
-            	}
+            Material m = Material.getMaterial(material);
+            if (m != null && m == b.getType()) {
+                return true;
             }
         }
-        catch (Exception localException) {}
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return false;
     }
 }
