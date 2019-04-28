@@ -1,0 +1,16 @@
+# EasyElevator config
+#
+# Dzjkb
+# jakub.pies@gmail.com
+# April 2019
+
+maxPerimeter: 24
+maxFloos: 10
+arrival:
+  playSound: true
+  sendMessage: true
+blocks:
+  border: "GOLD_BLOCK"
+  floor: "IRON_BLOCK"
+  outputFloor: "ORANGE_WOOL"
+  outputDoor: "RED_WOOL"
