@@ -65,41 +65,14 @@ public class Floor
     {
         int x1 = this.l1.getBlockX();
         int z1 = this.l1.getBlockZ();
-
         int x2 = this.l2.getBlockX();
         int z2 = this.l2.getBlockZ();
 
-        int xStart = 0;int xEnd = 0;int zStart = 0;int zEnd = 0;
-        if (x1 < x2)
-        {
-            xStart = x1;
-            xEnd = x2;
-        }
-        if (x1 > x2)
-        {
-            xStart = x2;
-            xEnd = x1;
-        }
-        if (x1 == x2)
-        {
-            xStart = x1;
-            xEnd = x1;
-        }
-        if (z1 < z2)
-        {
-            zStart = z1;
-            zEnd = z2;
-        }
-        if (z1 > z2)
-        {
-            zStart = z2;
-            zEnd = z1;
-        }
-        if (z1 == z2)
-        {
-            zStart = z1;
-            zEnd = z1;
-        }
+        int xStart = Math.min(x1, x2);
+        int xEnd = Math.max(x1, x2);
+        int zStart = Math.min(z1, z2);
+        int zEnd = Math.max(z1, z2);
+
         for (int x = xStart; x <= xEnd; x++) {
             for (int z = zStart; z <= zEnd; z++)
             {
@@ -123,41 +96,14 @@ public class Floor
     {
         int x1 = this.l1.getBlockX();
         int z1 = this.l1.getBlockZ();
-
         int x2 = this.l2.getBlockX();
         int z2 = this.l2.getBlockZ();
 
-        int xStart = 0;int xEnd = 0;int zStart = 0;int zEnd = 0;
-        if (x1 < x2)
-        {
-            xStart = x1;
-            xEnd = x2;
-        }
-        if (x1 > x2)
-        {
-            xStart = x2;
-            xEnd = x1;
-        }
-        if (x1 == x2)
-        {
-            xStart = x1;
-            xEnd = x1;
-        }
-        if (z1 < z2)
-        {
-            zStart = z1;
-            zEnd = z2;
-        }
-        if (z1 > z2)
-        {
-            zStart = z2;
-            zEnd = z1;
-        }
-        if (z1 == z2)
-        {
-            zStart = z1;
-            zEnd = z1;
-        }
+        int xStart = Math.min(x1, x2);
+        int xEnd = Math.max(x1, x2);
+        int zStart = Math.min(z1, z2);
+        int zEnd = Math.max(z1, z2);
+
         for (int x = xStart; x <= xEnd; x++) {
             for (int z = zStart; z <= zEnd; z++)
             {
@@ -195,37 +141,11 @@ public class Floor
         int x2 = this.l2.getBlockX();
         int z2 = this.l2.getBlockZ();
 
-        int xStart = 0;int xEnd = 0;int zStart = 0;int zEnd = 0;
-        if (x1 < x2)
-        {
-            xStart = x1;
-            xEnd = x2;
-        }
-        if (x1 > x2)
-        {
-            xStart = x2;
-            xEnd = x1;
-        }
-        if (x1 == x2)
-        {
-            xStart = x1;
-            xEnd = x1;
-        }
-        if (z1 < z2)
-        {
-            zStart = z1;
-            zEnd = z2;
-        }
-        if (z1 > z2)
-        {
-            zStart = z2;
-            zEnd = z1;
-        }
-        if (z1 == z2)
-        {
-            zStart = z1;
-            zEnd = z1;
-        }
+        int xStart = Math.min(x1, x2);
+        int xEnd = Math.max(x1, x2);
+        int zStart = Math.min(z1, z2);
+        int zEnd = Math.max(z1, z2);
+
         for (int x = xStart; x <= xEnd; x++) {
             for (int z = zStart; z <= zEnd; z++)
             {
@@ -319,17 +239,13 @@ public class Floor
 
     public void setCalled(boolean b)
     {
-        if (b)
-        {
-            if (!this.hasOpenDoors)
-            {
+        if (b) {
+            if (!this.hasOpenDoors) {
                 this.callSign.setLine(3, "Called");
                 this.callSign.update();
                 this.isCalled = true;
             }
-        }
-        else
-        {
+        } else {
             this.callSign.setLine(3, "");
             this.callSign.update();
             this.isCalled = false;

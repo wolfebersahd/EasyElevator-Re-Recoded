@@ -459,7 +459,7 @@ public class Elevator
                 }
                 this.stops.clear();
                 addStops(getFloorNumberFromHeight(getNextFloorHeight_2()));
-                this.platform.isStuck(false);
+                this.platform.setStuck(false);
                 this.platform.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "The Elevator is stuck. Resetting...");
                 this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 50L);
             }

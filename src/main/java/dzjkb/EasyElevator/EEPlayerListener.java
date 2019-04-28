@@ -11,6 +11,8 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.Material;
 
+import dzjkb.EasyElevator.ElevatorFinders;
+
 public class EEPlayerListener
         implements Listener
 {
@@ -30,7 +32,7 @@ public class EEPlayerListener
             Player player = event.getPlayer();
             EEPermissionManager pm = new EEPermissionManager(player);
             Sign sign = (Sign)clicked.getState();
-            Elevator e = this.ee.getElevator(sign);
+            Elevator e = ElevatorFinders.getElevator(this.ee, this.ee.getElevators(), sign);
 
             if (e == null)
                 return;

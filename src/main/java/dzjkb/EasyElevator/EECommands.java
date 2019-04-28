@@ -77,8 +77,10 @@ public class EECommands implements CommandExecutor {
                     help(player);
                 else if (!(pm.has("easyelevator.stop.cmd") || pm.has("easyelevator.stop.*")))
                     noPerms(player);
-                else
+                else if (args.length == 1)
                     cmdStop(player);
+                else if (args.length == 2)
+                    cmdStop2(player, args[1]);
                 return true;
 
             default:
@@ -102,10 +104,10 @@ public class EECommands implements CommandExecutor {
 
     private void cmdCall(Player player) {
         boolean success = false;
-        Sign sign = getSurroundingElevatorSign(player);
+        Sign sign = ElevatorFinders.getSurroundingElevatorSign(this.ee.getElevators(), player);
         if (sign != null)
         {
-            Elevator e = getElevator(sign);
+            Elevator e = ElevatorFinders.getElevator(this.ee, this.ee.getElevators(), sign);
             if (e != null)
             {
                 e.Call(sign.getY());
@@ -120,9 +122,9 @@ public class EECommands implements CommandExecutor {
     }
 
     private void cmdStop(Player player) {
-        for (int i = 0; i < this.elevators.size(); i++)
+        for (int i = 0; i < this.ee.getElevators().size(); i++)
         {
-            Elevator e = (Elevator)this.elevators.get(i);
+            Elevator e = (Elevator)this.ee.getElevators().get(i);
             if (e.isInElevator(player))
             {
                 int target = e.getFloorNumberFromHeight(e.getNextFloorHeight_2());
@@ -130,19 +132,19 @@ public class EECommands implements CommandExecutor {
                 {
                     e.addStops(target);
                     player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Stopping at floor " + target);
-                    return true;
+                    break;
                 }
             }
         }
     }
 
-    private void cmdStop2(Player player) {
+    private void cmdStop2(Player player, String arg) {
         try
         {
-            int target = Integer.parseInt(args[1]);
-            for (int i = 0; i < this.elevators.size(); i++)
+            int target = Integer.parseInt(arg);
+            for (int i = 0; i < this.ee.getElevators().size(); i++)
             {
-                Elevator e = (Elevator)this.elevators.get(i);
+                Elevator e = this.ee.getElevators().get(i);
                 if (e.isInElevator(player))
                 {
                     if ((target > e.getFloors().size()) || (target < 1))
@@ -151,13 +153,13 @@ public class EECommands implements CommandExecutor {
                     }
                     e.addStops(target);
                     player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Stopping at floor " + target);
-                    i = this.elevators.size();
+                    i = this.ee.getElevators().size();
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Floor '" + args[1] + "' is not a valid value");
+            player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Floor '" + arg + "' is not a valid value");
         }
     }
 }

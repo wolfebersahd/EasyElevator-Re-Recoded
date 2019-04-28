@@ -3,6 +3,8 @@ package dzjkb.EasyElevator;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.lang.Math;
+
 import dzjkb.EasyElevator.EasyElevator;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -34,7 +36,7 @@ public class Platform
     private Sign platformSign = null;
     private Location l1;
     private Location l2;
-    private List<Block> platform = new ArrayList();
+    private List<Block> platform = new ArrayList<>();
 
     public Platform(EasyElevator plugin, Location l1, Location l2, int min, int max)
     {
@@ -43,8 +45,6 @@ public class Platform
         this.min = min;
         this.max = max;
         this.world = l1.getWorld();
-
-
 
         initializePlatform(l1, l2);
     }
@@ -57,42 +57,10 @@ public class Platform
         int x2 = l2.getBlockX();
         int z2 = l2.getBlockZ();
 
-        int xStart = 0;int xEnd = 0;int zStart = 0;int zEnd = 0;
-        if (x1 < x2)
-        {
-            xStart = x1;
-            xEnd = x2;
-        }
-        if (x1 > x2)
-        {
-            xStart = x2;
-            xEnd = x1;
-        }
-        if (x1 == x2)
-        {
-            xStart = x1;
-            xEnd = x1;
-        }
-        if (z1 < z2)
-        {
-            zStart = z1;
-            zEnd = z2;
-        }
-        if (z1 > z2)
-        {
-            zStart = z2;
-            zEnd = z1;
-        }
-        if (z1 == z2)
-        {
-            zStart = z1;
-            zEnd = z1;
-        }
-        xStart++;
-        xEnd--;
-
-        zStart++;
-        zEnd--;
+        int xStart = Math.min(x1, x2) + 1;
+        int xEnd = Math.max(x1, x2) - 1;
+        int zStart = Math.min(z1, z2) + 1;
+        int zEnd = Math.max(z1, z2) - 1;
 
         this.xmin = xStart;
         this.zmin = zStart;
@@ -269,37 +237,10 @@ public class Platform
         int x2 = this.l2.getBlockX();
         int z2 = this.l2.getBlockZ();
 
-        int xStart = 0;int xEnd = 0;int zStart = 0;int zEnd = 0;
-        if (x1 < x2)
-        {
-            xStart = x1;
-            xEnd = x2;
-        }
-        if (x1 > x2)
-        {
-            xStart = x2;
-            xEnd = x1;
-        }
-        if (x1 == x2)
-        {
-            xStart = x1;
-            xEnd = x1;
-        }
-        if (z1 < z2)
-        {
-            zStart = z1;
-            zEnd = z2;
-        }
-        if (z1 > z2)
-        {
-            zStart = z2;
-            zEnd = z1;
-        }
-        if (z1 == z2)
-        {
-            zStart = z1;
-            zEnd = z1;
-        }
+        int xStart = Math.min(x1, x2);
+        int xEnd = Math.max(x1, x2);
+        int zStart = Math.min(z1, z2);
+        int zEnd = Math.max(z1, z2);
         for (int x = xStart; x <= xEnd; x++) {
             for (int z = zStart; z <= zEnd; z++)
             {
@@ -350,7 +291,7 @@ public class Platform
         return this.isStuck;
     }
 
-    public void isStuck(boolean b)
+    public void setStuck(boolean b)
     {
         this.isStuck = b;
     }

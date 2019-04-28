@@ -1,3 +1,5 @@
+package dzjkb.EasyElevator;
+
 public class EEConfiguration
 {
     public int maxPerimeter = 24;

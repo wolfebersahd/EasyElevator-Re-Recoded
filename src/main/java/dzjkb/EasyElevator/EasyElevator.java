@@ -51,4 +51,8 @@ public class EasyElevator
     public List<Elevator> getElevators() {
         return this.elevators;
     }
+
+    public EEConfiguration getEEConfig() {
+        return this.config;
+    }
 }

@@ -12,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import dzjkb.EasyElevator.Elevator;
+import dzjkb.EasyElevator.EasyElevator;
 import dzjkb.EasyElevator.EEUtils;
 
 public class ElevatorFinders {
@@ -71,7 +72,7 @@ public class ElevatorFinders {
         return false;
     }
 
-    public static Elevator getElevator(List<Elevator> elvs, Sign sign)
+    public static Elevator getElevator(EasyElevator plugin, List<Elevator> elvs, Sign sign)
     {
         if (EEUtils.isEESign(sign))
         {
@@ -89,7 +90,7 @@ public class ElevatorFinders {
                 }
             }
             if (e == null) {
-                e = new Elevator(this.ee, sign);
+                e = new Elevator(plugin, plugin.getEEConfig(), sign);
             }
             if (e != null) {
                 if (e.isInitialized())
