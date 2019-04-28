@@ -46,8 +46,10 @@ public class EECommands implements CommandExecutor {
         Player player = (Player)sender;
         EEPermissionManager pm = new EEPermissionManager(player);
 
-        if (args.length <= 0)
+        if (args.length <= 0) {
             help(player);
+            return true;
+        }
 
         switch (args[0]) {
             case "help":

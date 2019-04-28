@@ -81,7 +81,8 @@ public class Floor
                     if ((tempBlock.getType().equals(Material.ACACIA_DOOR)) || 
                     	(tempBlock.getType().equals(Material.BIRCH_DOOR)) || 
                     	(tempBlock.getType().equals(Material.DARK_OAK_DOOR)) ||
-                    	(tempBlock.getType().equals(Material.OAK_DOOR)) ||
+                    	(tempBlock.getType().equals(Material.WOOD_DOOR)) ||
+                        (tempBlock.getType().equals(Material.WOODEN_DOOR)) ||
                     	(tempBlock.getType().equals(Material.JUNGLE_DOOR)) ||
                     	(tempBlock.getType().equals(Material.SPRUCE_DOOR)) ||
                     	(tempBlock.getType().equals(Material.IRON_DOOR))){
@@ -114,11 +115,11 @@ public class Floor
                         if (this.elevator.isOutputDoor(tempBlock))
                         {
                             this.OutputDoorMat = tempBlock.getType();
-                            tempBlock.setType(Material.REDSTONE_TORCH);
+                            tempBlock.setType(Material.REDSTONE_TORCH_ON);
                             this.redstoneOutDoorBlock.add(tempBlock);
                         }
                     }
-                    else if ((this.elevator.isOutputDoor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH))) {
+                    else if ((this.elevator.isOutputDoor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH_ON))) {
                         if (this.redstoneOutDoorBlock.contains(tempBlock))
                         {
                             tempBlock.setType(this.OutputDoorMat);
@@ -156,12 +157,12 @@ public class Floor
                         if (this.elevator.isOutputFloor(tempBlock))
                         {
                             this.OutputFloorMat = tempBlock.getType();
-                            tempBlock.setType(Material.REDSTONE_TORCH);
+                            tempBlock.setType(Material.REDSTONE_TORCH_ON);
                             this.redstoneOutFloorBlock.add(tempBlock);
                             
                         }
                     }
-                    else if ((this.elevator.isOutputFloor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH))) {
+                    else if ((this.elevator.isOutputFloor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH_ON))) {
                         if (this.redstoneOutFloorBlock.contains(tempBlock))
                         {
                             tempBlock.setType(this.OutputFloorMat);
@@ -182,6 +183,7 @@ public class Floor
         for (Block block : this.doorOpenBlock) { 
         	BlockState bs = block.getState();
         	BlockData bd = bs.getBlockData();
+            // BlockState bd = bs.getData();
         	Openable o = (Openable) bd;
         	Door d = (Door) o;
         	if (!d.isOpen()) {
