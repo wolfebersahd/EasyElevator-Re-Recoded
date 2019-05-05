@@ -1,6 +1,7 @@
 package dzjkb.EasyElevator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,14 +26,15 @@ public class Elevator
 
     private Sign sign;
     private Block attached;
-    private int highestPoint;
-    private int lowestPoint;
+    private int maxFloors;
+    private int maxPerimeter;
+
     private int xLow;
     private int xHigh;
+    private int yLow;
+    private int yHigh;
     private int zLow;
     private int zHigh;
-    private int maxFloors = -1;
-    private int maxPerimeter = -1;
 
     private List<Floor> floors = new ArrayList<Floor>();
     public Floor currentFloor = null;
@@ -59,207 +61,323 @@ public class Elevator
         initializeLift();
     }
 
-    private void initializeLift()
-    {
-        int count = 0;
+    private void initFailure(String msg) {
+        throw new RuntimeException("Failed to initialize an elevator: " + msg);
+    }
 
+    private void detectDimensions() {
+        int low = getLowPoint();
+        int high = getHighPoint();
+
+        int[] lowDims = getEndpoints(low);
+        int[] highDims = getEndpoints(high);
+
+        if (!Arrays.equals(lowDims, highDims)) {
+            initFailure("unaligned upper and lower border");
+        }
+
+        this.yHigh = high;
+        this.yLow = low;
+
+        this.xLow = lowDims[0];
+        this.xHigh = lowDims[1];
+        this.zLow = lowDims[2];
+        this.zHigh = lowDims[3];
+
+        if (this.xHigh - this.xLow > this.maxPerimeter) {
+            initFailure("too long on the x dimension");
+        }
+        if (this.zHigh - this.zLow > this.maxPerimeter) {
+            initFailure("too long on the z dimension");
+        }
+    }
+
+    private int getLowPoint() {
+        Location l = this.attached.getLocation();
         int low = -1;
-        int high = -1;
-        for (int i = this.sign.getY(); i >= 0; i--) {
-            Block b = this.world.getBlockAt(this.attached.getLocation().getBlockX(), i, this.attached.getLocation().getBlockZ());
+
+        for (int i = this.sign.getY(); i >= 0; --i) {
+            l.setY(i);
+            Block b = this.world.getBlockAt(l);
             if (isBorder(b)) {
                 low = i;
                 break;
             }
         }
 
-        for (int i = this.sign.getY(); i < this.world.getMaxHeight(); i++) {
-            Block b = this.world.getBlockAt(this.attached.getLocation().getBlockX(), i, this.attached.getLocation().getBlockZ());
+        if (low == -1)
+            initFailure("no lower border");
+        return low;
+    }
+
+    private int getHighPoint() {
+        Location l = this.attached.getLocation();
+        int high = -1;
+
+        for (int i = this.sign.getY(); i < this.world.getMaxHeight(); ++i) {
+            l.setY(i);
+            Block b = this.world.getBlockAt(l);
             if (isBorder(b)) {
                 high = i;
                 break;
             }
         }
 
-        if ((low == -1) || (high == -1)) {
-            return;
+        if (high == -1)
+            initFailure("no upper border");
+        return high;
+    }
+
+    private int[] getEndpoints(int y) {
+        int x = this.attached.getLocation().getBlockX();
+        int z = this.attached.getLocation().getBlockZ();
+
+        int xEnd = x;
+        for (Block b = this.world.getBlockAt(xEnd, y, z); isBorder(b); b = this.world.getBlockAt(++xEnd, y, z));
+        int xStart = x;
+        for (Block b = this.world.getBlockAt(xStart, y, z); isBorder(b); b = this.world.getBlockAt(--xStart, y, z));
+        int zEnd = z;
+        for (Block b = this.world.getBlockAt(x, y, zEnd); isBorder(b); b = this.world.getBlockAt(x, y, ++zEnd));
+        int zStart = z;
+        for (Block b = this.world.getBlockAt(x, y, zStart); isBorder(b); b = this.world.getBlockAt(x, y, --zStart));
+
+        int[] ret = {xStart + 1, xEnd - 1, zStart + 1, zEnd + 1};
+        return ret;
+    }
+
+    private void detectFloors() {
+        int floorCount = 0;
+        for (int i = this.yLow + 1; i < this.yHigh; ++i) {
+            Block b = this.world.getBlockAt(this.xLow, i, this.zLow);
+            if (isFloor(b)) {
+                addFloor(i, ++floorCount);
+            }
         }
 
-        this.highestPoint = high;
-        this.lowestPoint = low;
+        if (floorCount > this.maxFloors) {
+            initFailure("too many floors");
+        }
+    }
 
-        Block b1 = null;
-        Block b2 = null;
-        for (int i = low; i < high; i++)
-        {
-            Location currLoc = new Location(this.world, this.attached.getLocation().getBlockX(), i, this.attached.getLocation().getBlockZ());
-            Block target = this.world.getBlockAt(currLoc);
-            if (isFloor(target))
-            {
-                int dirChange = 0;
-
-                String dir = "";
-
-                List<Block> blocks = new ArrayList<Block>();
-                Block start = target;
-                Block t = null;
-
-                b2 = null;
-                b1 = null;
-                do
-                {
-                    Block temp = null;
-                    if (t == null)
-                    {
-                        if (temp == null)
-                        {
-                            temp = checkForIron(start, start.getRelative(0, 0, 1), blocks);
-                            if (temp != null)
-                            {
-                                t = temp;
-                                if (dirChanged(dir, "East")) {
-                                    dirChange++;
-                                }
-                                dir = "East";
-                            }
-                        }
-                        if (temp == null)
-                        {
-                            temp = checkForIron(start, start.getRelative(0, 0, -1), blocks);
-                            if (temp != null)
-                            {
-                                t = temp;
-                                if (dirChanged(dir, "West")) {
-                                    dirChange++;
-                                }
-                                dir = "West";
-                            }
-                        }
-                        if (temp == null)
-                        {
-                            temp = checkForIron(start, start.getRelative(1, 0, 0), blocks);
-                            if (temp != null)
-                            {
-                                t = temp;
-                                if (dirChanged(dir, "North")) {
-                                    dirChange++;
-                                }
-                                dir = "North";
-                            }
-                        }
-                        if (temp == null)
-                        {
-                            temp = checkForIron(start, start.getRelative(-1, 0, 0), blocks);
-                            if (temp != null)
-                            {
-                                t = temp;
-                                if (dirChanged(dir, "South")) {
-                                    dirChange++;
-                                }
-                                dir = "South";
-                            }
-                        }
-                    }
-                    else if (t != null)
-                    {
-                        if (temp == null)
-                        {
-                            temp = checkForIron(start, t.getRelative(0, 0, 1), blocks);
-                            if (temp != null)
-                            {
-                                t = temp;
-                                if (dirChanged(dir, "East")) {
-                                    dirChange++;
-                                }
-                                dir = "East";
-                            }
-                        }
-                        if (temp == null)
-                        {
-                            temp = checkForIron(start, t.getRelative(0, 0, -1), blocks);
-                            if (temp != null)
-                            {
-                                t = temp;
-                                if (dirChanged(dir, "West")) {
-                                    dirChange++;
-                                }
-                                dir = "West";
-                            }
-                        }
-                        if (temp == null)
-                        {
-                            temp = checkForIron(start, t.getRelative(1, 0, 0), blocks);
-                            if (temp != null)
-                            {
-                                t = temp;
-                                if (dirChanged(dir, "North")) {
-                                    dirChange++;
-                                }
-                                dir = "North";
-                            }
-                        }
-                        if (temp == null)
-                        {
-                            temp = checkForIron(start, t.getRelative(-1, 0, 0), blocks);
-                            if (temp != null)
-                            {
-                                t = temp;
-                                if (dirChanged(dir, "South")) {
-                                    dirChange++;
-                                }
-                                dir = "South";
-                            }
-                        }
-                    }
-                    if (temp == null) {
-                        return;
-                    }
-                    if (dirChange == 1) {
-                        if (b1 == null) {
-                            b1 = (Block)blocks.get(blocks.size() - 1);
-                        }
-                    }
-                    if (dirChange == 3) {
-                        if (b2 == null) {
-                            b2 = (Block)blocks.get(blocks.size() - 1);
-                        }
-                    }
-                    blocks.add(temp);
-                } while (!start.equals(t));
-                if (blocks.size() > this.maxPerimeter) {
-                    return;
-                }
-                if (blocks.contains(target))
-                {
-                    if ((b1 == null) || (b2 == null)) {
-                        return;
-                    }
-                    if ((dirChange != 4) && (dirChange != 3)) {
-                        return;
-                    }
-                    Sign callSign = getCallSign(b1.getLocation(), b2.getLocation());
-                    if (callSign != null)
-                    {
-                        Floor floor = new Floor(this, b1.getLocation(), b2.getLocation(), callSign, count + 1);
-                        this.floors.add(floor);
-                        count++;
-                    }
-                }
-                else
-                {
-                    return;
+    private void addFloor(int y, int floorCount) {
+        // check for proper floor border blocks
+        for (int x = this.xLow; x <= this.xHigh; ++x) {
+            for (int z = this.zLow; z <= this.zHigh; ++z) {
+                if ((x == this.xLow || x == this.xHigh || z == this.zLow || z == this.zHigh) &&
+                    !isFloor(this.world.getBlockAt(x, y, z))
+                ) {
+                    initFailure("incomplete floor border");
                 }
             }
         }
-        if (this.floors.size() > this.maxFloors) {
-            return;
-        }
-        this.platform = new Platform(this.plugin, b1.getLocation(), b2.getLocation(), ((Floor)this.floors.get(0)).getHeight(), ((Floor)this.floors.get(this.floors.size() - 1)).getHeight());
+
+        Location lowCorner = new Location(this.world, this.xLow, y, this.zLow);
+        Location highCorner = new Location(this.world, this.xHigh, y, this.zHigh);
+        Sign callSign = getCallSign(lowCorner, highCorner);
+        Floor f = new Floor(this, lowCorner, highCorner, callSign, floorCount);
+        this.floors.add(f);
+    }
+
+    private void initPlatform() {
+        Location lowCorner = new Location(this.world, this.xLow, this.yLow, this.zLow);
+        Location highCorner = new Location(this.world, this.xHigh, this.yLow, this.zHigh);
+        this.platform = new Platform(this.plugin, lowCorner, highCorner, this.floors.get(0).getHeight(), this.floors.get(this.floors.size() - 1).getHeight());
         if (!this.platform.isInitialized()) {
-            return;
+            initFailure("failed to initialize platform");
         }
+    }
+
+    private void initializeLift() {
+        if (true) {
+            this.plugin.getLogger().info("Initializing new elevator");
+        }
+
+        int floorCount = 0;
+        detectDimensions();
+        detectFloors();
+        initPlatform();
+
         this.isInitialized = true;
-        System.out.println("[EasyElevator] An elevator has been initialized");
+        this.plugin.getLogger().info("An elevator has been initialized");
+
+        // Block b1 = null;
+        // Block b2 = null; // diagonal blocks of the floor
+        // for (int i = this.lowestPoint; i < this.highestPoint; ++i)
+        // {
+        //     Location currLoc = new Location(this.world, this.attached.getLocation().getBlockX(), i, this.attached.getLocation().getBlockZ());
+        //     Block target = this.world.getBlockAt(currLoc);
+        //     if (isFloor(target))
+        //     {
+        //         // This fucking big ass shit loop goes around the iron ring designating a
+        //         // new floor and adds each block to a collection until it comes back
+        //         // to the original block (!start.equals(t))
+        //         //
+        //         // come on
+
+        //         int dirChange = 0;
+
+        //         String dir = "";
+
+        //         List<Block> blocks = new ArrayList<Block>();
+        //         Block start = target;
+        //         Block t = null;
+
+        //         b2 = null;
+        //         b1 = null;
+        //         do
+        //         {
+        //             Block temp = null;
+        //             if (t == null)
+        //             {
+        //                 if (temp == null)
+        //                 {
+        //                     temp = checkForIron(start, start.getRelative(0, 0, 1), blocks);
+        //                     if (temp != null)
+        //                     {
+        //                         t = temp;
+        //                         if (dirChanged(dir, "East")) {
+        //                             dirChange++;
+        //                         }
+        //                         dir = "East";
+        //                     }
+        //                 }
+        //                 if (temp == null)
+        //                 {
+        //                     temp = checkForIron(start, start.getRelative(0, 0, -1), blocks);
+        //                     if (temp != null)
+        //                     {
+        //                         t = temp;
+        //                         if (dirChanged(dir, "West")) {
+        //                             dirChange++;
+        //                         }
+        //                         dir = "West";
+        //                     }
+        //                 }
+        //                 if (temp == null)
+        //                 {
+        //                     temp = checkForIron(start, start.getRelative(1, 0, 0), blocks);
+        //                     if (temp != null)
+        //                     {
+        //                         t = temp;
+        //                         if (dirChanged(dir, "North")) {
+        //                             dirChange++;
+        //                         }
+        //                         dir = "North";
+        //                     }
+        //                 }
+        //                 if (temp == null)
+        //                 {
+        //                     temp = checkForIron(start, start.getRelative(-1, 0, 0), blocks);
+        //                     if (temp != null)
+        //                     {
+        //                         t = temp;
+        //                         if (dirChanged(dir, "South")) {
+        //                             dirChange++;
+        //                         }
+        //                         dir = "South";
+        //                     }
+        //                 }
+        //             }
+        //             else if (t != null)
+        //             {
+        //                 if (temp == null)
+        //                 {
+        //                     temp = checkForIron(start, t.getRelative(0, 0, 1), blocks);
+        //                     if (temp != null)
+        //                     {
+        //                         t = temp;
+        //                         if (dirChanged(dir, "East")) {
+        //                             dirChange++;
+        //                         }
+        //                         dir = "East";
+        //                     }
+        //                 }
+        //                 if (temp == null)
+        //                 {
+        //                     temp = checkForIron(start, t.getRelative(0, 0, -1), blocks);
+        //                     if (temp != null)
+        //                     {
+        //                         t = temp;
+        //                         if (dirChanged(dir, "West")) {
+        //                             dirChange++;
+        //                         }
+        //                         dir = "West";
+        //                     }
+        //                 }
+        //                 if (temp == null)
+        //                 {
+        //                     temp = checkForIron(start, t.getRelative(1, 0, 0), blocks);
+        //                     if (temp != null)
+        //                     {
+        //                         t = temp;
+        //                         if (dirChanged(dir, "North")) {
+        //                             dirChange++;
+        //                         }
+        //                         dir = "North";
+        //                     }
+        //                 }
+        //                 if (temp == null)
+        //                 {
+        //                     temp = checkForIron(start, t.getRelative(-1, 0, 0), blocks);
+        //                     if (temp != null)
+        //                     {
+        //                         t = temp;
+        //                         if (dirChanged(dir, "South")) {
+        //                             dirChange++;
+        //                         }
+        //                         dir = "South";
+        //                     }
+        //                 }
+        //             }
+        //             if (temp == null) {
+        //                 initFailure("incomplete floor border");
+        //             }
+        //             if (dirChange == 1) {
+        //                 if (b1 == null) {
+        //                     b1 = (Block)blocks.get(blocks.size() - 1);
+        //                 }
+        //             }
+        //             if (dirChange == 3) {
+        //                 if (b2 == null) {
+        //                     b2 = (Block)blocks.get(blocks.size() - 1);
+        //                 }
+        //             }
+        //             blocks.add(temp);
+        //         } while (!start.equals(t));
+        //         if (blocks.size() > this.maxPerimeter) {
+        //             initFailure("floor perimeter exceeds maxPerimeter");
+        //         }
+        //         if (blocks.contains(target))
+        //         {
+        //             if ((b1 == null) || (b2 == null)) {
+        //                 initFailure("a corner block is missing after trying to initialize");
+        //             }
+        //             if ((dirChange != 4) && (dirChange != 3)) {
+        //                 initFailure("improper floor border shape");
+        //             }
+        //             Sign callSign = getCallSign(b1.getLocation(), b2.getLocation());
+        //             if (callSign != null)
+        //             {
+        //                 Floor floor = new Floor(this, b1.getLocation(), b2.getLocation(), callSign, floorCount + 1);
+        //                 this.floors.add(floor);
+        //                 floorCount++;
+        //             }
+        //         }
+        //         else
+        //         {
+        //             initFailure("floor border does not wrap back around");
+        //         }
+        //     }
+        // }
+        // if (this.floors.size() > this.maxFloors) {
+        //     initFailure("too many floors");
+        // }
+        // this.platform = new Platform(this.plugin, b1.getLocation(), b2.getLocation(), ((Floor)this.floors.get(0)).getHeight(), ((Floor)this.floors.get(this.floors.size() - 1)).getHeight());
+        // if (!this.platform.isInitialized()) {
+        //     initFailure("failed to initialize platform");
+        // }
+        // this.isInitialized = true;
+        // this.plugin.getLogger().info("An elevator has been initialized");
     }
 
     private Sign getCallSign(Location l1, Location l2)
@@ -306,8 +424,7 @@ public class Elevator
         return !dir.equals("") && !dir.equals(newDir);
     }
 
-    private Block checkForIron(Block start, Block t, List<Block> blocks)
-    {
+    private Block checkForIron(Block start, Block t, List<Block> blocks) {
         // if (isFloor(t) || isOutputDoor(t) || isOutputFloor(t))
         // {
         //     if (start.equals(t) && blocks.size() <= 4) {
@@ -326,7 +443,7 @@ public class Elevator
         )
             return t;
 
-        return null;
+        return null; 
     }
 
     public void addStops(int floor)
@@ -695,8 +812,8 @@ public class Elevator
         int y = loc.getBlockY();
         int z = loc.getBlockZ();
         return
-            (y > this.lowestPoint) &&
-            (y < this.highestPoint) &&
+            (y > this.yLow) &&
+            (y < this.yHigh) &&
             (x >= this.xLow) &&
             (x <= this.xHigh) &&
             (z >= this.zLow) &&

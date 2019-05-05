@@ -11,8 +11,6 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.Material;
 
-import dzjkb.EasyElevator.ElevatorFinders;
-
 public class EEPlayerListener
         implements Listener
 {
@@ -28,14 +26,18 @@ public class EEPlayerListener
     {
         Block clicked = event.getClickedBlock();
 
-        if (clicked.getType() == Material.SIGN) {
+        if (clicked != null && clicked.getType() == Material.SIGN) {
             Player player = event.getPlayer();
             EEPermissionManager pm = new EEPermissionManager(player);
             Sign sign = (Sign)clicked.getState();
-            Elevator e = ElevatorFinders.getElevator(this.ee, this.ee.getElevators(), sign);
+            Elevator e = this.ee.getElevators().getElevator(sign);
 
             if (e == null)
                 return;
+
+            if (true) {
+                this.ee.getLogger().info("A player has right-clicked an elevator sign!");
+            }
 
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if ((pm.has("easyelevator.call.sign")) || (pm.has("easyelevator.call.*"))) {

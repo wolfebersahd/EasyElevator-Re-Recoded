@@ -1,23 +1,31 @@
 package dzjkb.EasyElevator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.lang.Math;
 
-import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import dzjkb.EasyElevator.Elevator;
 import dzjkb.EasyElevator.EasyElevator;
 import dzjkb.EasyElevator.EEUtils;
 
-public class ElevatorFinders {
+public class ElevatorCollection
+{
 
-    public static Sign getSurroundingElevatorSign(List<Elevator> elvs, Player player)
+    private List<Elevator> elevators = new ArrayList<Elevator>();
+    private EasyElevator plugin;
+
+    public ElevatorCollection(EasyElevator p) {
+        this.plugin = p;
+        return;
+    }
+
+    public Sign getSurroundingElevatorSign(Player player)
     {
         Location loc = player.getLocation();
 
@@ -52,7 +60,7 @@ public class ElevatorFinders {
                         Sign sign = (Sign)b.getState();
                         // TODO replace with isEESign?
                         // if (sign.getLine(0).equals(ChatColor.DARK_GRAY + "[EElevator]") &&
-                        if (EEUtils.isEESign(sign) && !isAnyPlatformSign(elvs, sign)) {
+                        if (EEUtils.isEESign(sign) && !isAnyPlatformSign(sign)) {
                             return sign;
                         }
                     }
@@ -62,8 +70,8 @@ public class ElevatorFinders {
         return null;
     }
 
-    private static boolean isAnyPlatformSign(List<Elevator> es, Sign s) {
-        for (Elevator e : es) {
+    private boolean isAnyPlatformSign(Sign s) {
+        for (Elevator e : this.elevators) {
             if (e.getPlatform().getSign().equals(s)) {
                 return true;
             }
@@ -72,36 +80,41 @@ public class ElevatorFinders {
         return false;
     }
 
-    public static Elevator getElevator(EasyElevator plugin, List<Elevator> elvs, Sign sign)
+    public Elevator getElevator(Sign sign)
     {
         if (EEUtils.isEESign(sign))
         {
             Elevator e = null;
-            for (int i = 0; i < elvs.size(); i++)
+            org.bukkit.material.Sign signData = (org.bukkit.material.Sign)sign.getData();
+            Block attached = sign.getBlock().getRelative(signData.getAttachedFace());
+
+            for (int i = 0; i < this.elevators.size(); i++)
             {
-                org.bukkit.material.Sign signData = (org.bukkit.material.Sign)sign.getData();
-                Block attached = sign.getBlock().getRelative(signData.getAttachedFace());
-                if (((Elevator)elvs.get(i)).isPartOfElevator(attached.getLocation())) {
-                    if ((((Elevator)elvs.get(i)).isFloorSign(sign)) || (((Elevator)elvs.get(i)).isPlatformSign(sign)))
+                if (this.elevators.get(i).isPartOfElevator(attached.getLocation())) {
+                    if ((this.elevators.get(i).isFloorSign(sign)) || (this.elevators.get(i).isPlatformSign(sign)))
                     {
-                        e = elvs.get(i);
-                        i = elvs.size();
+                        e = this.elevators.get(i);
+                        i = this.elevators.size();
                     }
                 }
             }
             if (e == null) {
-                e = new Elevator(plugin, plugin.getEEConfig(), sign);
+                e = new Elevator(this.plugin, this.plugin.getEEConfig(), sign);
             }
             if (e != null) {
                 if (e.isInitialized())
                 {
-                    if (!elvs.contains(e)) {
-                        elvs.add(e);
+                    if (!this.elevators.contains(e)) {
+                        this.elevators.add(e);
                     }
                     return e;
                 }
             }
         }
         return null;
+    }
+
+    public List<Elevator> getElevators() {
+        return this.elevators;
     }
 }

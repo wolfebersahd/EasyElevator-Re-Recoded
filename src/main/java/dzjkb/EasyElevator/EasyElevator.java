@@ -1,13 +1,6 @@
 package dzjkb.EasyElevator;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.ChatColor;
-
-import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.command.CommandExecutor;
 
 import dzjkb.EasyElevator.EECommands;
 import dzjkb.EasyElevator.EEConfigurationManager;
@@ -20,25 +13,31 @@ public class EasyElevator
     private EEConfiguration config;
     private EECommands cmd;
     private EEPlayerListener playerListener;
-    private List<Elevator> elevators = new ArrayList<>();
+    // private List<Elevator> elevators = new ArrayList<>();
+    private ElevatorCollection elevators;
     
     public EasyElevator() {}
 
     public void onEnable() {
+        getLogger().info("Enabling EasyElevator");
+        reloadConfig();
+        this.elevators = new ElevatorCollection(this);
         this.cmd = new EECommands(this);
         this.playerListener = new EEPlayerListener(this);
         this.getCommand("elv").setExecutor(this.cmd);
         this.getCommand("eelevator").setExecutor(this.cmd);
         this.getServer().getPluginManager().registerEvents(this.playerListener, this);
-        reloadConfig();
+        getLogger().info("EasyElevator enabled!");
     }
 
     public void onDisable() {
-        for (Elevator e : this.elevators) {
+        getLogger().info("Disabling EasyElevator :(");
+        for (Elevator e : this.elevators.getElevators()) {
             if (e.currentFloor != null) {
                 e.currentFloor.switchRedstoneFloorOn(false);
             }
         }
+        getLogger().info("Disabled EasyElevator!");
     }
 
     public void reloadConfig() {
@@ -48,7 +47,7 @@ public class EasyElevator
         // playerListener, elevators
     }
 
-    public List<Elevator> getElevators() {
+    public ElevatorCollection getElevators() {
         return this.elevators;
     }
 

@@ -46,6 +46,14 @@ public class EECommands implements CommandExecutor {
         Player player = (Player)sender;
         EEPermissionManager pm = new EEPermissionManager(player);
 
+        if (true) {
+            this.ee.getLogger().info("EElv got a command:");
+            this.ee.getLogger().info(commandLabel1);
+            this.ee.getLogger().info("With arguments:");
+            for (String a : args)
+                this.ee.getLogger().info(a);
+        }
+
         if (args.length <= 0) {
             help(player);
             return true;
@@ -92,24 +100,30 @@ public class EECommands implements CommandExecutor {
     }
 
     private void cmdReload(Player player) {
+        if (true) {
+            this.ee.getLogger().info("command reload activated");
+        }
         this.ee.reloadConfig();
-        for (Elevator e : this.ee.getElevators()) {
+        for (Elevator e : this.ee.getElevators().getElevators()) {
             if (e.currentFloor != null) {
                 e.currentFloor.switchRedstoneFloorOn(false);
             }
         }
-        this.ee.getElevators().clear();
+        this.ee.getElevators().getElevators().clear();
         player.sendMessage(ChatColor.DARK_GRAY +
                 "[EasyElevator] " + ChatColor.GRAY +
                 "The plugin has been reloaded");
     }
 
     private void cmdCall(Player player) {
+        if (true) {
+            this.ee.getLogger().info("command call activated");
+        }
         boolean success = false;
-        Sign sign = ElevatorFinders.getSurroundingElevatorSign(this.ee.getElevators(), player);
+        Sign sign = this.ee.getElevators().getSurroundingElevatorSign(player);
         if (sign != null)
         {
-            Elevator e = ElevatorFinders.getElevator(this.ee, this.ee.getElevators(), sign);
+            Elevator e = this.ee.getElevators().getElevator(sign);
             if (e != null)
             {
                 e.Call(sign.getY());
@@ -124,9 +138,12 @@ public class EECommands implements CommandExecutor {
     }
 
     private void cmdStop(Player player) {
-        for (int i = 0; i < this.ee.getElevators().size(); i++)
+        if (true) {
+            this.ee.getLogger().info("command stop activated");
+        }
+        for (int i = 0; i < this.ee.getElevators().getElevators().size(); i++)
         {
-            Elevator e = (Elevator)this.ee.getElevators().get(i);
+            Elevator e = (Elevator)this.ee.getElevators().getElevators().get(i);
             if (e.isInElevator(player))
             {
                 int target = e.getFloorNumberFromHeight(e.getNextFloorHeight_2());
@@ -141,12 +158,15 @@ public class EECommands implements CommandExecutor {
     }
 
     private void cmdStop2(Player player, String arg) {
+        if (true) {
+            this.ee.getLogger().info("command stop2 activated");
+        }
         try
         {
             int target = Integer.parseInt(arg);
-            for (int i = 0; i < this.ee.getElevators().size(); i++)
+            for (int i = 0; i < this.ee.getElevators().getElevators().size(); i++)
             {
-                Elevator e = this.ee.getElevators().get(i);
+                Elevator e = this.ee.getElevators().getElevators().get(i);
                 if (e.isInElevator(player))
                 {
                     if ((target > e.getFloors().size()) || (target < 1))
@@ -155,7 +175,7 @@ public class EECommands implements CommandExecutor {
                     }
                     e.addStops(target);
                     player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Stopping at floor " + target);
-                    i = this.ee.getElevators().size();
+                    i = this.ee.getElevators().getElevators().size();
                 }
             }
         }
