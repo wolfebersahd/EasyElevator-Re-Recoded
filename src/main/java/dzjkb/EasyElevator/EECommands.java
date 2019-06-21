@@ -126,7 +126,7 @@ public class EECommands implements CommandExecutor {
             Elevator e = this.ee.getElevators().getElevator(sign);
             if (e != null)
             {
-                e.Call(sign.getY());
+                e.call(sign.getY());
                 success = true;
             }
         }

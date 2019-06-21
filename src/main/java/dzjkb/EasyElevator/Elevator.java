@@ -26,8 +26,10 @@ public class Elevator
 
     private Sign sign;
     private Block attached;
+
     private int maxFloors;
     private int maxPerimeter;
+    private boolean debug;
 
     private int xLow;
     private int xHigh;
@@ -54,11 +56,18 @@ public class Elevator
         this.sign = s;
         this.maxFloors = cfg.maxFloors;
         this.maxPerimeter = cfg.maxPerimeter;
+        this.debug = cfg.debug;
 
         org.bukkit.material.Sign signData = (org.bukkit.material.Sign)s.getData();
         this.attached = s.getBlock().getRelative(signData.getAttachedFace());
 
         initializeLift();
+    }
+
+    private void dbg(String msg) {
+        if (this.debug) {
+            this.plugin.getLogger().info(msg);
+        }
     }
 
     private void initFailure(String msg) {
@@ -90,6 +99,13 @@ public class Elevator
         if (this.zHigh - this.zLow > this.maxPerimeter) {
             initFailure("too long on the z dimension");
         }
+
+        dbg("xLow: " + String.valueOf(this.xLow));
+        dbg("xLow: " + String.valueOf(this.xHigh));
+        dbg("xLow: " + String.valueOf(this.xLow));
+        dbg("xLow: " + String.valueOf(this.xHigh));
+        dbg("xLow: " + String.valueOf(this.xLow));
+        dbg("xLow: " + String.valueOf(this.xHigh));
     }
 
     private int getLowPoint() {
@@ -151,6 +167,7 @@ public class Elevator
             Block b = this.world.getBlockAt(this.xLow, i, this.zLow);
             if (isFloor(b)) {
                 addFloor(i, ++floorCount);
+                dbg("added floor " + String.valueOf(floorCount));
             }
         }
 
@@ -188,9 +205,7 @@ public class Elevator
     }
 
     private void initializeLift() {
-        if (true) {
-            this.plugin.getLogger().info("Initializing new elevator");
-        }
+        dbg("Initializing new elevator");
 
         int floorCount = 0;
         detectDimensions();
@@ -380,37 +395,41 @@ public class Elevator
         // this.plugin.getLogger().info("An elevator has been initialized");
     }
 
-    private Sign getCallSign(Location l1, Location l2)
+    private Sign getCallSign(Location lowCorner, Location highCorner)
     {
-        BlockFace[] faces = new BlockFace[4];
-        faces[0] = BlockFace.NORTH;
-        faces[1] = BlockFace.EAST;
-        faces[2] = BlockFace.SOUTH;
-        faces[3] = BlockFace.WEST;
+        // BlockFace[] faces = new BlockFace[4];
+        // faces[0] = BlockFace.NORTH;
+        // faces[1] = BlockFace.EAST;
+        // faces[2] = BlockFace.SOUTH;
+        // faces[3] = BlockFace.WEST;
 
-        int x1 = l1.getBlockX();
-        int z1 = l1.getBlockZ();
-        int x2 = l2.getBlockX();
-        int z2 = l2.getBlockZ();
+        // int x1 = lowCorner.getBlockX();
+        // int z1 = lowCorner.getBlockZ();
+        // int x2 = highCorner.getBlockX();
+        // int z2 = highCorner.getBlockZ();
 
-        int xStart = Math.min(x1, x2) - 1;
-        int xEnd = Math.max(x1, x2) + 1;
-        int zStart = Math.min(z1, z2) - 1;
-        int zEnd = Math.max(z1, z2) + 1;
+        // int xStart = Math.min(x1, x2) - 1;
+        // int xEnd = Math.max(x1, x2) + 1;
+        // int zStart = Math.min(z1, z2) - 1;
+        // int zEnd = Math.max(z1, z2) + 1;
 
-        this.xLow = xStart;
-        this.xHigh = xEnd;
-        this.zLow = zStart;
-        this.zHigh = zEnd;
+        // this.xLow = xStart;
+        // this.xHigh = xEnd;
+        // this.zLow = zStart;
+        // this.zHigh = zEnd;
 
-        for (int y = l1.getBlockY() + 2; y <= l1.getBlockY() + 3; y++) {
-            for (int x = xStart; x <= xEnd; x++) {
-                for (int z = zStart; z <= zEnd; z++)
-                {
+        int xStart = lowCorner.getBlockX();
+        int xEnd = highCorner.getBlockX();
+        int zStart = lowCorner.getBlockZ();
+        int zEnd = highCorner.getBlockZ();
+
+        for (int y = lowCorner.getBlockY() + 2; y <= lowCorner.getBlockY() + 3; ++y) {
+            for (int x = xStart; x <= xEnd; ++x) {
+                for (int z = zStart; z <= zEnd; ++z) {
                     Block b = this.world.getBlockAt(x, y, z);
                     if (
                         b.getType().equals(Material.WALL_SIGN) &&
-                        ((x == xStart || x == xEnd) || (z == zStart || z == zEnd))
+                        (x == xStart || x == xEnd || z == zStart || z == zEnd)
                     ) {
                         return (Sign)b.getState();
                     }
@@ -420,51 +439,48 @@ public class Elevator
         return null;
     }
 
-    private boolean dirChanged(String dir, String newDir) {
-        return !dir.equals("") && !dir.equals(newDir);
-    }
+    // private boolean dirChanged(String dir, String newDir) {
+    //     return !dir.equals("") && !dir.equals(newDir);
+    // }
 
-    private Block checkForIron(Block start, Block t, List<Block> blocks) {
-        // if (isFloor(t) || isOutputDoor(t) || isOutputFloor(t))
-        // {
-        //     if (start.equals(t) && blocks.size() <= 4) {
-        //         return null;
-        //     }
-        //     if (!blocks.contains(t)) {
-        //         return t;
-        //     }
-        // }
-        // return null;
+    // private Block checkForIron(Block start, Block t, List<Block> blocks) {
+    //     // if (isFloor(t) || isOutputDoor(t) || isOutputFloor(t))
+    //     // {
+    //     //     if (start.equals(t) && blocks.size() <= 4) {
+    //     //         return null;
+    //     //     }
+    //     //     if (!blocks.contains(t)) {
+    //     //         return t;
+    //     //     }
+    //     // }
+    //     // return null;
 
-        if (
-            (isFloor(t) || isOutputDoor(t) || isOutputFloor(t)) &&
-            !blocks.contains(t) &&
-            !(start.equals(t) && blocks.size() <= 4)
-        )
-            return t;
+    //     if (
+    //         (isFloor(t) || isOutputDoor(t) || isOutputFloor(t)) &&
+    //         !blocks.contains(t) &&
+    //         !(start.equals(t) && blocks.size() <= 4)
+    //     )
+    //         return t;
 
-        return null; 
-    }
+    //     return null; 
+    // }
 
-    public void addStops(int floor)
-    {
+    public void addStops(int floor) {
         int height = -1;
         for (int i = 0; i < this.floors.size(); i++) {
-            if (((Floor)this.floors.get(i)).getFloor() == floor) {
-                height = ((Floor)this.floors.get(i)).getHeight();
+            // TODO just do floors.get(floor)?
+            if (this.floors.get(i).getFloor() == floor) {
+                height = this.floors.get(i).getHeight();
             }
         }
         addStopsFromHeight(height);
     }
 
-    public void addStopsFromHeight(int height)
-    {
+    public void addStopsFromHeight(int height) {
         if (height != -1) {
-            if (!this.stops.contains(Integer.valueOf(height)))
-            {
-                this.stops.add(Integer.valueOf(height));
-                if (!this.isMoving)
-                {
+            if (!this.stops.contains(height)) {
+                this.stops.add(height);
+                if (!this.isMoving) {
                     this.isMoving = true;
                     run();
                 }
@@ -472,18 +488,16 @@ public class Elevator
         }
     }
 
-    public void Call(int height)
-    {
+    // height here refers to the absolute height of the floor sign ???
+    public void call(int height) {
         boolean hasHeight = false;
         Floor f = null;
-        for (int i = 0; i < this.floors.size(); i++)
-        {
-            f = (Floor)this.floors.get(i);
-            if (f.getSignHeight() == height)
-            {
+        for (int i = 0; i < this.floors.size(); i++) {
+            f = this.floors.get(i);
+            if (f.getSignHeight() == height) {
                 hasHeight = true;
                 f.setCalled(true);
-                i = this.floors.size();
+                break;
             }
         }
         if (hasHeight) {
@@ -491,12 +505,11 @@ public class Elevator
         }
     }
 
-    public void StopAt(int floor)
-    {
+    public void stopAt(int floor) {
         for (Floor f : this.floors) {
             if (f.getFloor() == floor)
             {
-                Call(f.getSignHeight());
+                call(f.getSignHeight());
                 return;
             }
         }
@@ -504,18 +517,21 @@ public class Elevator
 
     int lcount = 0;
 
-    public void run()
-    {
+    // public void run() {
+    //     return;
+    // }
+
+    public void run() {
         if (this.lcount == 6) {
             this.lcount = 0;
         }
         updateDirection();
-        updateFloorIndicator();
+        updateFloorIndicators();
         if (!this.hasOpenDoor)
         {
             if (!this.platform.isStuck())
             {
-                if (this.stops.contains(Integer.valueOf(this.platform.getHeight())))
+                if (this.stops.contains(this.platform.getHeight()))
                 {
                     for (Floor f : this.floors) {
                         if (f.getHeight() == this.platform.getHeight()) {
@@ -527,8 +543,8 @@ public class Elevator
                         if (this.cfg.playArrivalSound) {
                             this.currentFloor.playOpenSound();
                         }
-                        this.currentFloor.switchRedstoneFloorOn(true);
-                        this.currentFloor.OpenDoor();
+                        // this.currentFloor.switchRedstoneFloorOn(true);
+                        this.currentFloor.openDoor();
                         this.hasOpenDoor = true;
                         this.currentFloor.setCalled(false);
                         this.platform.stopTeleport();
@@ -540,7 +556,7 @@ public class Elevator
                     if (!this.direction.equals("")) {
                         if (this.currentFloor != null)
                         {
-                            this.currentFloor.switchRedstoneFloorOn(false);
+                            // this.currentFloor.switchRedstoneFloorOn(false);
                             this.currentFloor = null;
                         }
                     }
@@ -583,7 +599,7 @@ public class Elevator
         }
         else if (this.currentFloor != null)
         {
-            this.currentFloor.CloseDoor();
+            this.currentFloor.closeDoor();
             this.hasOpenDoor = false;
             removeCurrentFloor();
             this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 5L);
@@ -600,11 +616,11 @@ public class Elevator
         this.platform.writeSign(1, String.valueOf(next));
     }
 
-    public int getFloorNumberFromHeight(int hight)
+    public int getFloorNumberFromHeight(int height)
     {
         int floor = -1;
         for (Floor f : this.floors) {
-            if (f.getHeight() == hight) {
+            if (f.getHeight() == height) {
                 return f.getFloor();
             }
         }
@@ -660,7 +676,7 @@ public class Elevator
             if (this.direction.equals("UP")) {
                 for (int i = 0; i < this.stops.size(); i++)
                 {
-                    int t = ((Integer)this.stops.get(i)).intValue();
+                    int t = this.stops.get(i);
                     if ((next == -1) &&
                             (t > current)) {
                         next = t;
@@ -673,7 +689,7 @@ public class Elevator
             if (this.direction.equals("DOWN")) {
                 for (int i = 0; i < this.stops.size(); i++)
                 {
-                    int t = ((Integer)this.stops.get(i)).intValue();
+                    int t = this.stops.get(i);
                     if ((next == -1) &&
                             (t < current)) {
                         next = t;
@@ -706,7 +722,7 @@ public class Elevator
     private void removeCurrentFloor()
     {
         for (int i = 0; i < this.stops.size(); i++) {
-            if (((Integer)this.stops.get(i)).intValue() == this.platform.getHeight()) {
+            if (this.stops.get(i) == this.platform.getHeight()) {
                 this.stops.remove(i);
             }
         }
@@ -714,6 +730,13 @@ public class Elevator
 
     private void updateDirection()
     {
+        // this function updates the direction as follows:
+        // - If the current direction is up and there is a stop above our current height, return
+        // - If the current direction is down and there is a stop below, return
+        // - If the current direction is none, set direction to first stop in this.stops
+        // - Else if any stops left, flip direction
+        // - Else set direction to none
+
         int height = this.platform.getHeight();
         for (Iterator<Integer> localIterator = this.stops.iterator(); localIterator.hasNext();)
         {
@@ -755,21 +778,21 @@ public class Elevator
         }
     }
 
-    private void updateFloorIndicator()
+    private void updateFloorIndicators()
     {
         int curr = getCurrentFloor();
         for (int i = 0; i < this.floors.size(); i++) {
             if (curr != -1)
             {
-                ((Floor)this.floors.get(i)).writeSign(2, ""+curr);
+                this.floors.get(i).writeSign(2, ""+curr);
             }
             else
             {
                 if (this.direction.equals("UP")) {
-                    ((Floor)this.floors.get(i)).writeSign(2, "/\\");
+                    this.floors.get(i).writeSign(2, "/\\");
                 }
                 if (this.direction.equals("DOWN")) {
-                    ((Floor)this.floors.get(i)).writeSign(2, "\\/");
+                    this.floors.get(i).writeSign(2, "\\/");
                 }
             }
         }
@@ -798,8 +821,8 @@ public class Elevator
     {
         if (isFloor(this.platform.getHeight())) {
             for (int i = 0; i < this.floors.size(); i++) {
-                if (this.platform.getHeight() == ((Floor)this.floors.get(i)).getHeight()) {
-                    return ((Floor)this.floors.get(i)).getFloor();
+                if (this.platform.getHeight() == this.floors.get(i).getHeight()) {
+                    return this.floors.get(i).getFloor();
                 }
             }
         }
@@ -848,7 +871,7 @@ public class Elevator
     public boolean isFloor(int floorHeight)
     {
         for (int i = 0; i < this.floors.size(); i++) {
-            if (floorHeight == ((Floor)this.floors.get(i)).getHeight()) {
+            if (floorHeight == this.floors.get(i).getHeight()) {
                 return true;
             }
         }

@@ -22,11 +22,9 @@ import org.bukkit.util.Vector;
 public class Platform
 {
     private final EasyElevator plugin;
-    private final Server server;
     private World world;
-    private int level = -1;
-    private int min = -1;
-    private int max = -1;
+    private int ymin = -1;
+    private int ymax = -1;
     private int xmin;
     private int zmin;
     private int xmax;
@@ -34,16 +32,14 @@ public class Platform
     private boolean isInitialized = false;
     private boolean isStuck = false;
     private Sign platformSign = null;
-    private Location l1;
-    private Location l2;
+    private Location lowCorner;
+    private Location highCorner;
     private List<Block> platform = new ArrayList<>();
 
-    public Platform(EasyElevator plugin, Location l1, Location l2, int min, int max)
-    {
+    public Platform(EasyElevator plugin, Location l1, Location l2, int min, int max) {
         this.plugin = plugin;
-        this.server = plugin.getServer();
-        this.min = min;
-        this.max = max;
+        this.ymin = min;
+        this.ymax = max;
         this.world = l1.getWorld();
 
         initializePlatform(l1, l2);
@@ -64,12 +60,12 @@ public class Platform
 
         this.xmin = xStart;
         this.zmin = zStart;
-        this.xmax = xEnd;
+        this.ymax = xEnd;
         this.zmax = zEnd;
 
-        this.l1 = this.world.getBlockAt(xStart, l1.getBlockY(), zStart).getLocation();
-        this.l2 = this.world.getBlockAt(xEnd, l1.getBlockY(), zEnd).getLocation();
-        for (int i = this.min; i <= this.max; i++)
+        this.lowCorner = this.world.getBlockAt(xStart, l1.getBlockY(), zStart).getLocation();
+        this.highCorner = this.world.getBlockAt(xEnd, l1.getBlockY(), zEnd).getLocation();
+        for (int i = this.ymin; i <= this.ymax; i++)
         {
             for (int x = xStart; x <= xEnd; x++) {
                 for (int z = zStart; z <= zEnd; z++)
@@ -80,10 +76,10 @@ public class Platform
                     {
                         this.platform.add(tempBlock);
                         if ((signBlock.getState() instanceof Sign)) {
-                            this.platformSign = ((Sign)signBlock.getState());
+                            this.platformSign = (Sign)signBlock.getState();
                         }
-                        this.l1.setY(i);
-                        this.l2.setY(i);
+                        this.lowCorner.setY(i);
+                        this.highCorner.setY(i);
                     }
                     else if (this.platform.size() != 0)
                     {
@@ -92,7 +88,7 @@ public class Platform
                 }
             }
             if (this.platform.size() != 0) {
-                i = this.max + 1;
+                i = this.ymax + 1;
             }
         }
         if (this.platform.size() == 0) {
@@ -107,9 +103,9 @@ public class Platform
         this.platformSign.update();
     }
 
-    public void moveDown(int lcount)
+    private void move(int lcount, boolean up)
     {
-        if (canMove(this.l1.getBlockY() - 1))
+        if (canMove(this.lowCorner.getBlockY() - 1))
         {
             this.isStuck = false;
             if (lcount == 5)
@@ -122,14 +118,14 @@ public class Platform
                     b.setType(Material.STONE_SLAB);
                     BlockState bs = b.getState();
                     BlockData bd = bs.getBlockData();
-                    Slab s = (Slab) bd;
+                    Slab s = (Slab)bd;
                     s.setType(Slab.Type.DOUBLE);
                     bs.setBlockData(s);
                     bs.update();
                     this.platform.remove(i);
                     this.platform.add(i, b);
-                    this.l1.setY(b.getLocation().getBlockY());
-                    this.l2.setY(b.getLocation().getBlockY());
+                    this.lowCorner.setY(b.getLocation().getBlockY());
+                    this.highCorner.setY(b.getLocation().getBlockY());
                 }
                 updateSign(this.platformSign.getY() - 1);
             }
@@ -137,8 +133,17 @@ public class Platform
             for (Player player : players) {
                 if (hasPlayer(player))
                 {
-                    player.setVelocity(new Vector(0.0D, -0.17D, 0.0D));
+                    double yVelocity = 0.17;
+                    if (!up) {
+                        yVelocity *= -1;
+                    }
+
+                    player.setVelocity(new Vector(0.0, yVelocity, 0.0));
                     player.setFallDistance(0.0F);
+
+                    if (up) {
+                        moveUpCorrection(player);
+                    }
                 }
             }
         }
@@ -148,52 +153,101 @@ public class Platform
         }
     }
 
-    public void moveUp(int lcount)
-    {
-        if (canMove(this.l1.getBlockY() + 3))
-        {
-            if (lcount == 5)
-            {
-                for (int i = 0; i < this.platform.size(); i++)
-                {
-                    Block b = (Block)this.platform.get(i);
-                    b.setType(Material.AIR);
-                    b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() + 1, b.getLocation().getBlockZ());
-                    b.setType(Material.STONE_SLAB);
-                    BlockState bs = b.getState();
-                    BlockData bd = bs.getBlockData();
-                    Slab s = (Slab) bd;
-                    s.setType(Slab.Type.DOUBLE);
-                    bs.setBlockData(s);
-                    bs.update();
-                    this.platform.remove(i);
-                    this.platform.add(i, b);
-                    this.l1.setY(b.getLocation().getBlockY());
-                    this.l2.setY(b.getLocation().getBlockY());
-                }
-                updateSign(this.platformSign.getY() + 1);
-            }
-            List<Player> players = this.world.getPlayers();
-            for (Player player : players) {
-                if (hasPlayer(player))
-                {
-                    player.setVelocity(new Vector(0.0D, 0.17D, 0.0D));
-                    player.setFallDistance(0.0F);
-                    moveUpCorrection(player);
-                }
-            }
-            this.isStuck = false;
-        }
-        else
-        {
-            this.isStuck = true;
-        }
+    public void moveDown(int lcount) {
+        move(lcount, false);
     }
+
+    public void moveUp(int lcount) {
+        move(lcount, true);
+    }
+
+    // public void moveDown(int lcount)
+    // {
+    //     if (canMove(this.lowCorner.getBlockY() - 1))
+    //     {
+    //         this.isStuck = false;
+    //         if (lcount == 5)
+    //         {
+    //             for (int i = 0; i < this.platform.size(); i++)
+    //             {
+    //                 Block b = (Block)this.platform.get(i);
+    //                 b.setType(Material.AIR);
+    //                 b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() - 1, b.getLocation().getBlockZ());
+    //                 b.setType(Material.STONE_SLAB);
+    //                 BlockState bs = b.getState();
+    //                 BlockData bd = bs.getBlockData();
+    //                 Slab s = (Slab) bd;
+    //                 s.setType(Slab.Type.DOUBLE);
+    //                 bs.setBlockData(s);
+    //                 bs.update();
+    //                 this.platform.remove(i);
+    //                 this.platform.add(i, b);
+    //                 this.lowCorner.setY(b.getLocation().getBlockY());
+    //                 this.highCorner.setY(b.getLocation().getBlockY());
+    //             }
+    //             updateSign(this.platformSign.getY() - 1);
+    //         }
+    //         List<Player> players = this.world.getPlayers();
+    //         for (Player player : players) {
+    //             if (hasPlayer(player))
+    //             {
+    //                 player.setVelocity(new Vector(0.0D, -0.17D, 0.0D));
+    //                 player.setFallDistance(0.0F);
+    //             }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         this.isStuck = true;
+    //     }
+    // }
+
+    // public void moveUp(int lcount)
+    // {
+    //     if (canMove(this.lowCorner.getBlockY() + 3))
+    //     {
+    //         if (lcount == 5)
+    //         {
+    //             for (int i = 0; i < this.platform.size(); i++)
+    //             {
+    //                 Block b = (Block)this.platform.get(i);
+    //                 b.setType(Material.AIR);
+    //                 b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() + 1, b.getLocation().getBlockZ());
+    //                 b.setType(Material.STONE_SLAB);
+    //                 BlockState bs = b.getState();
+    //                 BlockData bd = bs.getBlockData();
+    //                 Slab s = (Slab) bd;
+    //                 s.setType(Slab.Type.DOUBLE);
+    //                 bs.setBlockData(s);
+    //                 bs.update();
+    //                 this.platform.remove(i);
+    //                 this.platform.add(i, b);
+    //                 this.lowCorner.setY(b.getLocation().getBlockY());
+    //                 this.highCorner.setY(b.getLocation().getBlockY());
+    //             }
+    //             updateSign(this.platformSign.getY() + 1);
+    //         }
+    //         List<Player> players = this.world.getPlayers();
+    //         for (Player player : players) {
+    //             if (hasPlayer(player))
+    //             {
+    //                 player.setVelocity(new Vector(0.0D, 0.17D, 0.0D));
+    //                 player.setFallDistance(0.0F);
+    //                 moveUpCorrection(player);
+    //             }
+    //         }
+    //         this.isStuck = false;
+    //     }
+    //     else
+    //     {
+    //         this.isStuck = true;
+    //     }
+    // }
 
     private void moveUpCorrection(Player player)
     {
         Location pLoc = player.getLocation();
-        if (pLoc.getBlockY() <= this.l1.getBlockY() - 0.5D)
+        if (pLoc.getBlockY() <= this.lowCorner.getBlockY() - 0.5D)
         {
             pLoc.setY(pLoc.getBlockY() + 2);
             player.teleport(pLoc);
@@ -205,8 +259,8 @@ public class Platform
         int x = player.getLocation().getBlockX();
         int y = player.getLocation().getBlockY();
         int z = player.getLocation().getBlockZ();
-        if ((y >= this.min + 5) || (y <= this.max + 2)) {
-            if ((z >= this.zmin) && (z <= this.zmax) && (x >= this.xmin) && (x <= this.xmax)) {
+        if ((y >= this.ymin + 5) || (y <= this.ymax + 2)) {
+            if ((z >= this.zmin) && (z <= this.zmax) && (x >= this.xmin) && (x <= this.ymax)) {
                 return true;
             }
         }
@@ -231,11 +285,11 @@ public class Platform
 
     public boolean canMove(int height)
     {
-        int x1 = this.l1.getBlockX();
-        int z1 = this.l1.getBlockZ();
+        int x1 = this.lowCorner.getBlockX();
+        int z1 = this.lowCorner.getBlockZ();
 
-        int x2 = this.l2.getBlockX();
-        int z2 = this.l2.getBlockZ();
+        int x2 = this.highCorner.getBlockX();
+        int z2 = this.highCorner.getBlockZ();
 
         int xStart = Math.min(x1, x2);
         int xEnd = Math.max(x1, x2);
@@ -298,7 +352,7 @@ public class Platform
 
     public int getHeight()
     {
-        return this.l1.getBlockY();
+        return this.lowCorner.getBlockY();
     }
 
     public void writeSign(int line, String message)

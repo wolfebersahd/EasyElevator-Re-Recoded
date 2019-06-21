@@ -9,7 +9,7 @@ import dzjkb.EasyElevator.EEPlayerListener;
 public class EasyElevator
         extends JavaPlugin
 {
-    private EEConfigurationManager configManager = new EEConfigurationManager(this);
+    private EEConfigurationManager configManager;
     private EEConfiguration config;
     private EECommands cmd;
     private EEPlayerListener playerListener;
@@ -21,9 +21,10 @@ public class EasyElevator
     public void onEnable() {
         getLogger().info("Enabling EasyElevator");
         reloadConfig();
+        this.configManager = new EEConfigurationManager(this);
         this.elevators = new ElevatorCollection(this);
         this.cmd = new EECommands(this);
-        this.playerListener = new EEPlayerListener(this);
+        this.playerListener = new EEPlayerListener(this, this.config);
         this.getCommand("elv").setExecutor(this.cmd);
         this.getCommand("eelevator").setExecutor(this.cmd);
         this.getServer().getPluginManager().registerEvents(this.playerListener, this);
@@ -32,12 +33,12 @@ public class EasyElevator
 
     public void onDisable() {
         getLogger().info("Disabling EasyElevator :(");
-        for (Elevator e : this.elevators.getElevators()) {
-            if (e.currentFloor != null) {
-                e.currentFloor.switchRedstoneFloorOn(false);
-            }
-        }
-        getLogger().info("Disabled EasyElevator!");
+        // for (Elevator e : this.elevators.getElevators()) {
+        //     if (e.currentFloor != null) {
+        //         e.currentFloor.switchRedstoneFloorOn(false);
+        //     }
+        // }
+        getLogger().info("EasyElevator disabled!");
     }
 
     public void reloadConfig() {
@@ -45,6 +46,8 @@ public class EasyElevator
 
         // Propagate the config change to any classes that need it
         // playerListener, elevators
+
+        this.playerListener.updateConfig(this.config);
     }
 
     public ElevatorCollection getElevators() {

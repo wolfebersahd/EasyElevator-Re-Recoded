@@ -1,7 +1,10 @@
 package dzjkb.EasyElevator;
 
-public class EEConfiguration
-{
+/* Although unenforcable without loads of unnecessary boilerplate,
+ * this class is to be treated as an immutable named tuple.
+ */
+public class EEConfiguration {
+
     public int maxPerimeter = 24;
     public int maxFloors = 10;
     public boolean playArrivalSound = true;
@@ -10,6 +13,7 @@ public class EEConfiguration
     public String blockFloor = "IRON_BLOCK";
     public String blockOutputDoor = "RED_WOOL";
     public String blockOutputFloor = "ORANGE_WOOL";
+    public boolean debug = true;
 
     public EEConfiguration() {}
 }

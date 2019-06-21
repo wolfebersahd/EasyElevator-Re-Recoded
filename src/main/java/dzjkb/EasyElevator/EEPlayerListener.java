@@ -15,10 +15,22 @@ public class EEPlayerListener
         implements Listener
 {
     EasyElevator ee;
+    private EEConfiguration config;
 
-    public EEPlayerListener(EasyElevator e)
+    public EEPlayerListener(EasyElevator e, EEConfiguration cfg)
     {
         this.ee = e;
+        this.config = cfg;
+    }
+
+    private void dbg(String msg) {
+        if (this.config.debug) {
+            this.ee.getLogger().info(msg);
+        }
+    }
+
+    public void updateConfig(EEConfiguration newCfg) {
+        this.config = newCfg;
     }
 
     @EventHandler
@@ -35,33 +47,32 @@ public class EEPlayerListener
             if (e == null)
                 return;
 
-            if (true) {
-                this.ee.getLogger().info("A player has right-clicked an elevator sign!");
-            }
+            dbg("A player has clicked an elevator sign!");
 
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                dbg("It's a right click!");
                 if ((pm.has("easyelevator.call.sign")) || (pm.has("easyelevator.call.*"))) {
-                    if (e.isFloorSign(sign))
-                    {
-                        e.Call(sign.getY());
+                    if (e.isFloorSign(sign)) {
+                        dbg("Calling elvator");
+                        e.call(sign.getY());
                         player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "The Elevator has been called");
                         return;
                     }
                 }
-                if (e.isPlatformSign(sign))
-                {
+                if (e.isPlatformSign(sign)) {
                     e.changeFloor();
                     return;
                 }
             }
 
             if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if ((pm.has("easyelevator.stop.sign")) || (pm.has("easyelevator.stop.*")))
-                {
-                    if (e.isPlatformSign(sign))
-                    {
-                        e.StopAt(Integer.parseInt(e.getPlatform().getSign().getLine(1)));
-                        player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Stopping at floor " + Integer.parseInt(e.getPlatform().getSign().getLine(1)));
+                dbg("It's a left click!");
+                if ((pm.has("easyelevator.stop.sign")) || (pm.has("easyelevator.stop.*"))) {
+                    if (e.isPlatformSign(sign)) {
+                        int stop = Integer.parseInt(e.getPlatform().getSign().getLine(1));
+                        dbg("Stopping at " + String.valueOf(stop));
+                        e.stopAt(stop);
+                        player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Stopping at floor " + stop);
                     }
                 }
                 else {
@@ -71,6 +82,6 @@ public class EEPlayerListener
         }
     }
 
-    @EventHandler
-    public void onBlockPlace(BlockRedstoneEvent event) {}
+    // @EventHandler
+    // public void onBlockPlace(BlockRedstoneEvent event) {}
 }

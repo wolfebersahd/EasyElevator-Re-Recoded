@@ -22,31 +22,31 @@ import org.bukkit.material.MaterialData;
 
 public class Floor
 {
-    private Elevator elevator;
+    // private Elevator elevator;
     private Location l1;
     private Location l2;
     private World world;
     private Sign callSign;
-    private int floor;
+    private int floorNumber;
     private int height;
     private boolean isCalled = false;
     private boolean hasOpenDoors = false;
-    private Material OutputDoorMat = null;
-    private byte OutputDoorData = 0;
-    private Material OutputFloorMat = null;
-    private BlockState OutputFloorData = null;
+    // private Material outputDoorMat = null;
+    // private byte outputDoorData = 0;
+    // private Material outputFloorMat = null;
+    // private BlockState outputFloorData = null;
     private List<Block> doorOpenBlock = new ArrayList();
-    private List<Block> redstoneOutDoorBlock = new ArrayList();
-    private List<Block> redstoneOutFloorBlock = new ArrayList();
+    // private List<Block> redstoneOutDoorBlock = new ArrayList();
+    // private List<Block> redstoneOutFloorBlock = new ArrayList();
 
     public Floor(Elevator elv, Location l1, Location l2, Sign callSign, int floor)
     {
-        this.elevator = elv;
+        // this.elevator = elv;
         this.l1 = l1;
         this.l2 = l2;
         this.world = l1.getWorld();
         this.callSign = callSign;
-        this.floor = floor;
+        this.floorNumber = floor;
         this.height = l1.getBlockY();
 
         updateSign("0");
@@ -57,7 +57,7 @@ public class Floor
     private void initializeSign()
     {
         this.callSign.setLine(0, ChatColor.DARK_GRAY + "[EElevator]");
-        this.callSign.setLine(1, ""+ this.floor);
+        this.callSign.setLine(1, ""+ this.floorNumber);
         this.callSign.update();
     }
 
@@ -93,93 +93,94 @@ public class Floor
         }
     }
 
-    private void switchRedstoneDoorOn(boolean b)
-    {
-        int x1 = this.l1.getBlockX();
-        int z1 = this.l1.getBlockZ();
-        int x2 = this.l2.getBlockX();
-        int z2 = this.l2.getBlockZ();
+    // TODO wtf is this - some kind of automatic doors made of blocks?
+    // private void switchRedstoneDoorOn(boolean b)
+    // {
+    //     int x1 = this.l1.getBlockX();
+    //     int z1 = this.l1.getBlockZ();
+    //     int x2 = this.l2.getBlockX();
+    //     int z2 = this.l2.getBlockZ();
 
-        int xStart = Math.min(x1, x2);
-        int xEnd = Math.max(x1, x2);
-        int zStart = Math.min(z1, z2);
-        int zEnd = Math.max(z1, z2);
+    //     int xStart = Math.min(x1, x2);
+    //     int xEnd = Math.max(x1, x2);
+    //     int zStart = Math.min(z1, z2);
+    //     int zEnd = Math.max(z1, z2);
 
-        for (int x = xStart; x <= xEnd; x++) {
-            for (int z = zStart; z <= zEnd; z++)
-            {
-                Block tempBlock = this.world.getBlockAt(x, this.l1.getBlockY(), z);
-                if ((x == xStart) || (x == xEnd) || (z == zStart) || (z == zEnd)) {
-                    if (b)
-                    {
-                        if (this.elevator.isOutputDoor(tempBlock))
-                        {
-                            this.OutputDoorMat = tempBlock.getType();
-                            tempBlock.setType(Material.REDSTONE_TORCH_ON);
-                            this.redstoneOutDoorBlock.add(tempBlock);
-                        }
-                    }
-                    else if ((this.elevator.isOutputDoor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH_ON))) {
-                        if (this.redstoneOutDoorBlock.contains(tempBlock))
-                        {
-                            tempBlock.setType(this.OutputDoorMat);
-                            this.redstoneOutDoorBlock.remove(tempBlock);
-                        }
-                    }
-                }
-            }
-        }
-        if (!b) {
-            this.redstoneOutDoorBlock = new ArrayList();
-        }
-    }
+    //     for (int x = xStart; x <= xEnd; x++) {
+    //         for (int z = zStart; z <= zEnd; z++)
+    //         {
+    //             Block tempBlock = this.world.getBlockAt(x, this.l1.getBlockY(), z);
+    //             if ((x == xStart) || (x == xEnd) || (z == zStart) || (z == zEnd)) {
+    //                 if (b)
+    //                 {
+    //                     if (this.elevator.isOutputDoor(tempBlock))
+    //                     {
+    //                         this.outputDoorMat = tempBlock.getType();
+    //                         tempBlock.setType(Material.REDSTONE_TORCH_ON);
+    //                         this.redstoneOutDoorBlock.add(tempBlock);
+    //                     }
+    //                 }
+    //                 else if ((this.elevator.isOutputDoor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH_ON))) {
+    //                     if (this.redstoneOutDoorBlock.contains(tempBlock))
+    //                     {
+    //                         tempBlock.setType(this.outputDoorMat);
+    //                         this.redstoneOutDoorBlock.remove(tempBlock);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     if (!b) {
+    //         this.redstoneOutDoorBlock = new ArrayList();
+    //     }
+    // }
 
-    public void switchRedstoneFloorOn(boolean b)
-    {
-        int x1 = this.l1.getBlockX();
-        int z1 = this.l1.getBlockZ();
+    // public void switchRedstoneFloorOn(boolean b)
+    // {
+    //     int x1 = this.l1.getBlockX();
+    //     int z1 = this.l1.getBlockZ();
 
-        int x2 = this.l2.getBlockX();
-        int z2 = this.l2.getBlockZ();
+    //     int x2 = this.l2.getBlockX();
+    //     int z2 = this.l2.getBlockZ();
 
-        int xStart = Math.min(x1, x2);
-        int xEnd = Math.max(x1, x2);
-        int zStart = Math.min(z1, z2);
-        int zEnd = Math.max(z1, z2);
+    //     int xStart = Math.min(x1, x2);
+    //     int xEnd = Math.max(x1, x2);
+    //     int zStart = Math.min(z1, z2);
+    //     int zEnd = Math.max(z1, z2);
 
-        for (int x = xStart; x <= xEnd; x++) {
-            for (int z = zStart; z <= zEnd; z++)
-            {
-                Block tempBlock = this.world.getBlockAt(x, this.l1.getBlockY(), z);
-                if ((x == xStart) || (x == xEnd) || (z == zStart) || (z == zEnd)) {
-                    if (b)
-                    {
-                        if (this.elevator.isOutputFloor(tempBlock))
-                        {
-                            this.OutputFloorMat = tempBlock.getType();
-                            tempBlock.setType(Material.REDSTONE_TORCH_ON);
-                            this.redstoneOutFloorBlock.add(tempBlock);
+    //     for (int x = xStart; x <= xEnd; x++) {
+    //         for (int z = zStart; z <= zEnd; z++)
+    //         {
+    //             Block tempBlock = this.world.getBlockAt(x, this.l1.getBlockY(), z);
+    //             if ((x == xStart) || (x == xEnd) || (z == zStart) || (z == zEnd)) {
+    //                 if (b)
+    //                 {
+    //                     if (this.elevator.isOutputFloor(tempBlock))
+    //                     {
+    //                         this.outputFloorMat = tempBlock.getType();
+    //                         tempBlock.setType(Material.REDSTONE_TORCH_ON);
+    //                         this.redstoneOutFloorBlock.add(tempBlock);
                             
-                        }
-                    }
-                    else if ((this.elevator.isOutputFloor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH_ON))) {
-                        if (this.redstoneOutFloorBlock.contains(tempBlock))
-                        {
-                            tempBlock.setType(this.OutputFloorMat);
-                            this.redstoneOutFloorBlock.remove(tempBlock);
-                        }
-                    }
-                }
-            }
-        }
-        if (!b) {
-            this.redstoneOutFloorBlock = new ArrayList();
-        }
-    }
+    //                     }
+    //                 }
+    //                 else if ((this.elevator.isOutputFloor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH_ON))) {
+    //                     if (this.redstoneOutFloorBlock.contains(tempBlock))
+    //                     {
+    //                         tempBlock.setType(this.outputFloorMat);
+    //                         this.redstoneOutFloorBlock.remove(tempBlock);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     if (!b) {
+    //         this.redstoneOutFloorBlock = new ArrayList();
+    //     }
+    // }
 
-    public void OpenDoor()
+    public void openDoor()
     {
-        switchRedstoneDoorOn(true);
+        // switchRedstoneDoorOn(true);
         for (Block block : this.doorOpenBlock) { 
         	BlockState bs = block.getState();
         	BlockData bd = bs.getBlockData();
@@ -205,7 +206,7 @@ public class Floor
         this.hasOpenDoors = true;
     }
 
-    public void CloseDoor()
+    public void closeDoor()
     {
         for (Block block : this.doorOpenBlock) {
         	BlockState bs = block.getState();
@@ -230,7 +231,7 @@ public class Floor
             }*/
         }
         this.hasOpenDoors = false;
-        switchRedstoneDoorOn(false);
+        // switchRedstoneDoorOn(false);
     }
 
     public void updateSign(String platformFloor)
@@ -239,8 +240,7 @@ public class Floor
         this.callSign.update();
     }
 
-    public void setCalled(boolean b)
-    {
+    public void setCalled(boolean b) {
         if (b) {
             if (!this.hasOpenDoors) {
                 this.callSign.setLine(3, "Called");
@@ -266,7 +266,7 @@ public class Floor
 
     public int getFloor()
     {
-        return this.floor;
+        return this.floorNumber;
     }
 
     public int getSignHeight()
