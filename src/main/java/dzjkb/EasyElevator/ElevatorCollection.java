@@ -33,7 +33,7 @@ public class ElevatorCollection
         Location l1 = loc;
         Location l2 = loc;
 
-        if (!l1.equals(l2)) System.out.println("[EasyElevator] What the f");
+        if (!l1.equals(l2)) this.plugin.dbg("What the f");
 
         int x1 = l1.getBlockX();
         int y1 = l1.getBlockY();
@@ -81,7 +81,7 @@ public class ElevatorCollection
     }
 
     public Elevator getElevator(Sign sign) {
-        this.plugin.dbg("Entering getElevator(" + sign.toString() + ")");
+        this.plugin.dbg("Entering getElevator() with sign at: " + sign.getLocation().toString());
         if (EEUtils.isEESign(sign)) {
             Elevator e = null;
             org.bukkit.material.Sign signData = (org.bukkit.material.Sign)sign.getData();

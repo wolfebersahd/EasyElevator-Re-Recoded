@@ -13,9 +13,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Openable;
-import org.bukkit.block.data.type.Door;
+// import org.bukkit.block.data.Openable;
+import org.bukkit.material.Door;
 import org.bukkit.material.MaterialData;
 
 
@@ -181,15 +180,14 @@ public class Floor
     public void openDoor()
     {
         // switchRedstoneDoorOn(true);
-        for (Block block : this.doorOpenBlock) { 
+        for (Block block : this.doorOpenBlock) {
         	BlockState bs = block.getState();
-        	BlockData bd = bs.getBlockData();
+        	Door d = (Door)bs.getData();
             // BlockState bd = bs.getData();
-        	Openable o = (Openable) bd;
-        	Door d = (Door) o;
+        	// Openable o = (Openable) bd;
         	if (!d.isOpen()) {
         		d.setOpen(true);
-        		bs.setBlockData(o);
+        		bs.setData(d);
         		bs.update();
         	}
 //        	BlockState state = block.getState();
@@ -210,12 +208,12 @@ public class Floor
     {
         for (Block block : this.doorOpenBlock) {
         	BlockState bs = block.getState();
-        	BlockData bd = bs.getBlockData();
-        	Openable o = (Openable) bd;
-        	Door d = (Door) o;
+        	Door d = (Door)bs.getData();
+        	// Openable o = (Openable) bd;
+        	// Door d = (Door) o;
         	if (d.isOpen()) {
         		d.setOpen(false);
-        		bs.setBlockData(o);
+        		bs.setData(d);
         		bs.update();
         	}
 //        	Openable openable = (Openable) state.getData();
@@ -295,7 +293,7 @@ public class Floor
         for (Block block : this.doorOpenBlock)
         {
             Location loc = block.getLocation();
-            loc.getWorld().playSound(loc, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 0.0F);
+            loc.getWorld().playSound(loc, Sound.BLOCK_NOTE_PLING, 1.0F, 0.0F);
         }
     }
 }

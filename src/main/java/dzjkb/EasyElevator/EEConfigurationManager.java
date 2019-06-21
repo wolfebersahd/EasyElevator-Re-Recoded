@@ -47,9 +47,10 @@ public class EEConfigurationManager
     private int readInt(String key) {
         if (config().contains(key))
             return config().getInt(key);
-        else
+        else {
             throwIA("No value for key " + key);
             return 0;
+        }
     }
 
     private String readString(String key) {
@@ -61,9 +62,10 @@ public class EEConfigurationManager
     private boolean readBoolean(String key) {
         if (config().contains(key))
             return config().getBoolean(key);
-        else
+        else {
             throwIA("No value for key " + key);
             return false;
+        }
     }
 
     private void throwIA(String msg) {

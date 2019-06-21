@@ -46,7 +46,7 @@ public class EECommands implements CommandExecutor {
         Player player = (Player)sender;
         EEPermissionManager pm = new EEPermissionManager(player);
 
-        if (true) {
+        if (this.ee.getEEConfig().debug) {
             this.ee.getLogger().info("EElv got a command:");
             this.ee.getLogger().info(commandLabel1);
             this.ee.getLogger().info("With arguments:");
@@ -100,14 +100,12 @@ public class EECommands implements CommandExecutor {
     }
 
     private void cmdReload(Player player) {
-        if (true) {
-            this.ee.getLogger().info("command reload activated");
-        }
-        this.ee.reloadConfig();
+        this.ee.dbg("command reload activated");
+        this.ee.reloadEEConfig();
         for (Elevator e : this.ee.getElevators().getElevators()) {
-            if (e.currentFloor != null) {
-                e.currentFloor.switchRedstoneFloorOn(false);
-            }
+            // if (e.currentFloor != null) {
+            //     e.currentFloor.switchRedstoneFloorOn(false);
+            // }
         }
         this.ee.getElevators().getElevators().clear();
         player.sendMessage(ChatColor.DARK_GRAY +
@@ -116,9 +114,7 @@ public class EECommands implements CommandExecutor {
     }
 
     private void cmdCall(Player player) {
-        if (true) {
-            this.ee.getLogger().info("command call activated");
-        }
+        this.ee.dbg("command call activated");
         boolean success = false;
         Sign sign = this.ee.getElevators().getSurroundingElevatorSign(player);
         if (sign != null)
@@ -138,9 +134,7 @@ public class EECommands implements CommandExecutor {
     }
 
     private void cmdStop(Player player) {
-        if (true) {
-            this.ee.getLogger().info("command stop activated");
-        }
+        this.ee.dbg("command stop activated");
         for (int i = 0; i < this.ee.getElevators().getElevators().size(); i++)
         {
             Elevator e = (Elevator)this.ee.getElevators().getElevators().get(i);
@@ -158,9 +152,7 @@ public class EECommands implements CommandExecutor {
     }
 
     private void cmdStop2(Player player, String arg) {
-        if (true) {
-            this.ee.getLogger().info("command stop2 activated");
-        }
+        this.ee.dbg("command stop2 activated");
         try
         {
             int target = Integer.parseInt(arg);

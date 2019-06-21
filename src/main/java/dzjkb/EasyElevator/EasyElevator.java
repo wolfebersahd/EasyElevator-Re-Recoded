@@ -20,7 +20,7 @@ public class EasyElevator
 
     public void onEnable() {
         getLogger().info("Enabling EasyElevator");
-        reloadConfig();
+
         this.configManager = new EEConfigurationManager(this);
         this.elevators = new ElevatorCollection(this);
         this.cmd = new EECommands(this);
@@ -28,6 +28,8 @@ public class EasyElevator
         this.getCommand("elv").setExecutor(this.cmd);
         this.getCommand("eelevator").setExecutor(this.cmd);
         this.getServer().getPluginManager().registerEvents(this.playerListener, this);
+
+        reloadEEConfig();
         getLogger().info("EasyElevator enabled!");
     }
 
@@ -41,7 +43,7 @@ public class EasyElevator
         getLogger().info("EasyElevator disabled!");
     }
 
-    public void reloadConfig() {
+    public void reloadEEConfig() {
         this.config = this.configManager.loadConfig();
 
         // Propagate the config change to any classes that need it

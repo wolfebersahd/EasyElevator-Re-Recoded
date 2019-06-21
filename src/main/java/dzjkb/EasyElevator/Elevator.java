@@ -101,11 +101,11 @@ public class Elevator
         }
 
         dbg("xLow: " + String.valueOf(this.xLow));
-        dbg("xLow: " + String.valueOf(this.xHigh));
-        dbg("xLow: " + String.valueOf(this.xLow));
-        dbg("xLow: " + String.valueOf(this.xHigh));
-        dbg("xLow: " + String.valueOf(this.xLow));
-        dbg("xLow: " + String.valueOf(this.xHigh));
+        dbg("xHigh: " + String.valueOf(this.xHigh));
+        dbg("yLow: " + String.valueOf(this.yLow));
+        dbg("yHigh: " + String.valueOf(this.yHigh));
+        dbg("zLow: " + String.valueOf(this.zLow));
+        dbg("zHigh: " + String.valueOf(this.zHigh));
     }
 
     private int getLowPoint() {
@@ -157,7 +157,7 @@ public class Elevator
         int zStart = z;
         for (Block b = this.world.getBlockAt(x, y, zStart); isBorder(b); b = this.world.getBlockAt(x, y, --zStart));
 
-        int[] ret = {xStart + 1, xEnd - 1, zStart + 1, zEnd + 1};
+        int[] ret = {xStart + 1, xEnd - 1, zStart + 1, zEnd - 1};
         return ret;
     }
 
@@ -178,6 +178,7 @@ public class Elevator
 
     private void addFloor(int y, int floorCount) {
         // check for proper floor border blocks
+        this.plugin.dbg("Adding floor no. " + String.valueOf(floorCount) + " at y = " + String.valueOf(y));
         for (int x = this.xLow; x <= this.xHigh; ++x) {
             for (int z = this.zLow; z <= this.zHigh; ++z) {
                 if ((x == this.xLow || x == this.xHigh || z == this.zLow || z == this.zHigh) &&
@@ -418,18 +419,23 @@ public class Elevator
         // this.zLow = zStart;
         // this.zHigh = zEnd;
 
+        this.plugin.dbg("entering getCallSign()");
         int xStart = lowCorner.getBlockX();
         int xEnd = highCorner.getBlockX();
         int zStart = lowCorner.getBlockZ();
         int zEnd = highCorner.getBlockZ();
 
         for (int y = lowCorner.getBlockY() + 2; y <= lowCorner.getBlockY() + 3; ++y) {
-            for (int x = xStart; x <= xEnd; ++x) {
-                for (int z = zStart; z <= zEnd; ++z) {
+            for (int x = xStart - 1; x <= xEnd + 1; ++x) {
+                for (int z = zStart - 1; z <= zEnd + 1; ++z) {
                     Block b = this.world.getBlockAt(x, y, z);
+                    // this.dbg("Checking block at " + String.valueOf(x) +
+                    //          " " + String.valueOf(y) +
+                    //          " " + String.valueOf(z) +
+                    //          " of type " + b.getType().toString());
                     if (
                         b.getType().equals(Material.WALL_SIGN) &&
-                        (x == xStart || x == xEnd || z == zStart || z == zEnd)
+                        (x == xStart - 1 || x == xEnd + 1 || z == zStart - 1 || z == zEnd + 1)
                     ) {
                         return (Sign)b.getState();
                     }

@@ -9,13 +9,13 @@ import dzjkb.EasyElevator.EasyElevator;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
+// import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
+// import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.Slab;
+// import org.bukkit.material.MaterialData;
+// import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -61,7 +61,7 @@ public class Platform
 
         this.xmin = xStart;
         this.zmin = zStart;
-        this.ymax = xEnd;
+        this.xmax = xEnd;
         this.zmax = zEnd;
 
         this.lowCorner = this.world.getBlockAt(xStart, l1.getBlockY(), zStart).getLocation();
@@ -71,7 +71,11 @@ public class Platform
                 for (int z = zStart; z <= zEnd; z++) {
                     Block tempBlock = this.world.getBlockAt(x, i, z);
                     Block signBlock = this.world.getBlockAt(x, i + 2, z);
-                    if (tempBlock.getType() == Material.STONE_SLAB) {
+                    this.plugin.dbg("Checking at " + String.valueOf(x) +
+                                    " " + String.valueOf(i) +
+                                    " " + String.valueOf(z) +
+                                    ", type " + tempBlock.getType().toString());
+                    if (tempBlock.getType() == Material.DOUBLE_STONE_SLAB2) {
                         this.platform.add(tempBlock);
                         if ((signBlock.getState() instanceof Sign)) {
                             this.plugin.dbg(
@@ -120,13 +124,13 @@ public class Platform
                     Block b = (Block)this.platform.get(i);
                     b.setType(Material.AIR);
                     b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() - 1, b.getLocation().getBlockZ());
-                    b.setType(Material.STONE_SLAB);
-                    BlockState bs = b.getState();
-                    BlockData bd = bs.getBlockData();
-                    Slab s = (Slab)bd;
-                    s.setType(Slab.Type.DOUBLE);
-                    bs.setBlockData(s);
-                    bs.update();
+                    b.setType(Material.DOUBLE_STONE_SLAB2);
+                    // BlockState bs = b.getState();
+                    // MaterialData bd = bs.getData();
+                    // Slab s = (Slab)bd;
+                    // s.setType(Slab.Type.DOUBLE);
+                    // bs.setBlockData(s);
+                    // bs.update();
                     this.platform.remove(i);
                     this.platform.add(i, b);
                     this.lowCorner.setY(b.getLocation().getBlockY());
