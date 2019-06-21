@@ -47,6 +47,7 @@ public class Platform
 
     private void initializePlatform(Location l1, Location l2)
     {
+        this.plugin.dbg("Initializing platform at " + l1.toString() + " and " + l2.toString());
         int x1 = l1.getBlockX();
         int z1 = l1.getBlockZ();
 
@@ -65,24 +66,26 @@ public class Platform
 
         this.lowCorner = this.world.getBlockAt(xStart, l1.getBlockY(), zStart).getLocation();
         this.highCorner = this.world.getBlockAt(xEnd, l1.getBlockY(), zEnd).getLocation();
-        for (int i = this.ymin; i <= this.ymax; i++)
-        {
+        for (int i = this.ymin; i <= this.ymax; i++) {
             for (int x = xStart; x <= xEnd; x++) {
-                for (int z = zStart; z <= zEnd; z++)
-                {
+                for (int z = zStart; z <= zEnd; z++) {
                     Block tempBlock = this.world.getBlockAt(x, i, z);
                     Block signBlock = this.world.getBlockAt(x, i + 2, z);
-                    if (tempBlock.getType() == Material.STONE_SLAB)
-                    {
+                    if (tempBlock.getType() == Material.STONE_SLAB) {
                         this.platform.add(tempBlock);
                         if ((signBlock.getState() instanceof Sign)) {
+                            this.plugin.dbg(
+                                "Found sign at " + String.valueOf(x) +
+                                ", " + String.valueOf(i + 2) +
+                                ", " + String.valueOf(z));
+
                             this.platformSign = (Sign)signBlock.getState();
                         }
                         this.lowCorner.setY(i);
                         this.highCorner.setY(i);
                     }
-                    else if (this.platform.size() != 0)
-                    {
+                    else if (this.platform.size() != 0) {
+                        this.plugin.dbg("Non stone slab block found, aborting platform initialization");
                         return;
                     }
                 }
@@ -92,9 +95,11 @@ public class Platform
             }
         }
         if (this.platform.size() == 0) {
+            this.plugin.dbg("No platform blocks found");
             return;
         }
         if (this.platformSign == null) {
+            this.plugin.dbg("No sign found, platform initialization failed");
             return;
         }
         this.isInitialized = true;

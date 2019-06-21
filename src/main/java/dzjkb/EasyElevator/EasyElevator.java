@@ -57,4 +57,10 @@ public class EasyElevator
     public EEConfiguration getEEConfig() {
         return this.config;
     }
+
+    public void dbg(String msg) {
+        if (this.config.debug) {
+            this.getLogger().info(msg);
+        }
+    }
 }

@@ -80,34 +80,33 @@ public class ElevatorCollection
         return false;
     }
 
-    public Elevator getElevator(Sign sign)
-    {
-        if (EEUtils.isEESign(sign))
-        {
+    public Elevator getElevator(Sign sign) {
+        this.plugin.dbg("Entering getElevator(" + sign.toString() + ")");
+        if (EEUtils.isEESign(sign)) {
             Elevator e = null;
             org.bukkit.material.Sign signData = (org.bukkit.material.Sign)sign.getData();
             Block attached = sign.getBlock().getRelative(signData.getAttachedFace());
 
-            for (int i = 0; i < this.elevators.size(); i++)
-            {
+            for (int i = 0; i < this.elevators.size(); i++) {
                 if (this.elevators.get(i).isPartOfElevator(attached.getLocation())) {
-                    if ((this.elevators.get(i).isFloorSign(sign)) || (this.elevators.get(i).isPlatformSign(sign)))
-                    {
+                    if ((this.elevators.get(i).isFloorSign(sign)) || (this.elevators.get(i).isPlatformSign(sign))) {
                         e = this.elevators.get(i);
                         i = this.elevators.size();
                     }
                 }
             }
             if (e == null) {
+                this.plugin.dbg("No elevator found, initializing new one");
                 e = new Elevator(this.plugin, this.plugin.getEEConfig(), sign);
             }
             if (e != null) {
-                if (e.isInitialized())
-                {
+                if (e.isInitialized()) {
                     if (!this.elevators.contains(e)) {
                         this.elevators.add(e);
                     }
                     return e;
+                } else {
+                    this.plugin.dbg("Elevator not initialized, returning null");
                 }
             }
         }
