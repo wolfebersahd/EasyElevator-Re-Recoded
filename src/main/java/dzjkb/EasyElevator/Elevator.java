@@ -523,9 +523,90 @@ public class Elevator
 
     int lcount = 0;
 
-    // public void run() {
-    //     return;
-    // }
+    public void run_refactored() {
+        this.plugin.dbg("Running elevator");
+
+        if (this.lcount == 6) {
+            this.lcount = 0;
+        }
+
+        updateDirection();
+        updateFloorIndicators();
+
+        if (this.hasOpenDoor && this.currentFloor != null) {
+            this.plugin.dbg("Door is open, closing");
+            this.currentFloor.closeDoor();
+            this.hasOpenDoor = false;
+            removeCurrentFloor();
+            this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 5L);
+        } else if (!this.hasOpenDoor) {
+            this.plugin.dbg("Door is closed, trying to move");
+
+            if (this.platform.isStuck()) {
+                this.plugin.dbg("Platform stuck");
+                if (this.direction.equals("UP")) {
+                    this.direction = "DOWN";
+                } else {
+                    this.direction = "UP";
+                }
+                this.stops.clear();
+                addStops(getFloorNumberFromHeight(getNextFloorHeight_2()));
+                this.platform.setStuck(false);
+                this.platform.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "The Elevator is stuck. Resetting...");
+                this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 50L);
+            } else {
+                doElevatorAction();
+            }
+        }
+    }
+
+    private void doElevatorAction() {
+        this.plugin.dbg("Trying to move");
+        if (this.stops.contains(this.platform.getHeight())) {
+            for (Floor f : this.floors) {
+                if (f.getHeight() == this.platform.getHeight()) {
+                    this.currentFloor = f;
+                    this.plugin.dbg("Stopping at floor " + String.valueOf(this.currentFloor.getFloor()));
+                    doFloor();
+                }
+            }
+        } else {
+            switch (this.direction) {
+                case "UP":
+                    this.plugin.dbg("Moving up");
+                    this.platform.moveUp(this.lcount);
+                    this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
+                    this.lcount += 1;
+                break;
+
+                case "DOWN":
+                    this.plugin.dbg("Moving down");
+                    this.platform.moveDown(this.lcount);
+                    this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
+                    this.lcount += 1;
+                break;
+
+                default:
+                    this.plugin.dbg("Not moving");
+                    this.isMoving = false;
+            }
+        }
+    }
+
+    private void doFloor() {
+        if (this.currentFloor == null)
+            return;
+
+        if (this.cfg.playArrivalSound) {
+            this.currentFloor.playOpenSound();
+        }
+        // this.currentFloor.switchRedstoneFloorOn(true);
+        this.currentFloor.openDoor();
+        this.hasOpenDoor = true;
+        this.currentFloor.setCalled(false);
+        this.platform.stopTeleport();
+        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 100L);
+    }
 
     public void run() {
         if (this.lcount == 6) {

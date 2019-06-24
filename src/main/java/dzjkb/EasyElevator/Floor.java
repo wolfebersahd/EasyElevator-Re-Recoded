@@ -179,54 +179,64 @@ public class Floor
 
     public void openDoor()
     {
-        // switchRedstoneDoorOn(true);
-        for (Block block : this.doorOpenBlock) {
-        	BlockState bs = block.getState();
-        	Door d = (Door)bs.getData();
-            // BlockState bd = bs.getData();
-        	// Openable o = (Openable) bd;
-        	if (!d.isOpen()) {
-        		d.setOpen(true);
-        		bs.setData(d);
-        		bs.update();
-        	}
-//        	BlockState state = block.getState();
-//        	Openable openable = (Openable) state.getData();
-//        	openable.setOpen(true);
-//        	state.setData((MaterialData) openable);
-//        	state.update();
-//        	Door d = (Door) block.getState().getData();
-//        	d.setOpen(true);
-            /*if (block.getData() <= 3) {
-                block.setData((byte)(block.getData() + 4));
-            }*/
+        try {
+            // switchRedstoneDoorOn(true);
+            for (Block block : this.doorOpenBlock) {
+            	BlockState bs = block.getState();
+            	Door d = (Door)bs.getData();
+                // BlockState bd = bs.getData();
+            	// Openable o = (Openable) bd;
+            	if (!d.isOpen()) {
+            		d.setOpen(true);
+            		bs.setData(d);
+            		bs.update();
+            	}
+    //        	BlockState state = block.getState();
+    //        	Openable openable = (Openable) state.getData();
+    //        	openable.setOpen(true);
+    //        	state.setData((MaterialData) openable);
+    //        	state.update();
+    //        	Door d = (Door) block.getState().getData();
+    //        	d.setOpen(true);
+                /*if (block.getData() <= 3) {
+                    block.setData((byte)(block.getData() + 4));
+                }*/
+            }
+        } catch (Exception e) {
+            // the doors got fucked, who needs them anyway
+            return;
         }
         this.hasOpenDoors = true;
     }
 
     public void closeDoor()
     {
-        for (Block block : this.doorOpenBlock) {
-        	BlockState bs = block.getState();
-        	Door d = (Door)bs.getData();
-        	// Openable o = (Openable) bd;
-        	// Door d = (Door) o;
-        	if (d.isOpen()) {
-        		d.setOpen(false);
-        		bs.setData(d);
-        		bs.update();
-        	}
-//        	Openable openable = (Openable) state.getData();
-//        	openable.setOpen(false);
-//        	state.setData((MaterialData) openable);
-//        	state.update();
-//        	Door d = (Door) block.getState().getData();
-//            d.setOpen(false);
-            	
-            
-        	/*if (block.getData() >= 4) {
-                block.setData((byte)(block.getData() - 4));
-            }*/
+        try {
+            for (Block block : this.doorOpenBlock) {
+            	BlockState bs = block.getState();
+            	Door d = (Door)bs.getData();
+            	// Openable o = (Openable) bd;
+            	// Door d = (Door) o;
+            	if (d.isOpen()) {
+            		d.setOpen(false);
+            		bs.setData(d);
+            		bs.update();
+            	}
+    //        	Openable openable = (Openable) state.getData();
+    //        	openable.setOpen(false);
+    //        	state.setData((MaterialData) openable);
+    //        	state.update();
+    //        	Door d = (Door) block.getState().getData();
+    //            d.setOpen(false);
+                	
+                
+            	/*if (block.getData() >= 4) {
+                    block.setData((byte)(block.getData() - 4));
+                }*/
+            }
+        } catch (Exception e) {
+            // the doors got fucked, who needs them anyway
+            return;
         }
         this.hasOpenDoors = false;
         // switchRedstoneDoorOn(false);

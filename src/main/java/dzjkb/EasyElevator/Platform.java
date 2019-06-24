@@ -75,7 +75,7 @@ public class Platform
                                     " " + String.valueOf(i) +
                                     " " + String.valueOf(z) +
                                     ", type " + tempBlock.getType().toString());
-                    if (tempBlock.getType() == Material.DOUBLE_STONE_SLAB2) {
+                    if (tempBlock.getType() == Material.DOUBLE_STEP) {
                         this.platform.add(tempBlock);
                         if ((signBlock.getState() instanceof Sign)) {
                             this.plugin.dbg(
@@ -94,9 +94,8 @@ public class Platform
                     }
                 }
             }
-            if (this.platform.size() != 0) {
-                i = this.ymax + 1;
-            }
+            if (this.platform.size() != 0)
+                break;
         }
         if (this.platform.size() == 0) {
             this.plugin.dbg("No platform blocks found");
@@ -114,7 +113,8 @@ public class Platform
 
     private void move(int lcount, boolean up)
     {
-        if (canMove(this.lowCorner.getBlockY() - 1))
+        int heightDelta = up ? 1 : -1;
+        if (canMove(this.lowCorner.getBlockY() + heightDelta))
         {
             this.isStuck = false;
             if (lcount == 5)
@@ -123,8 +123,8 @@ public class Platform
                 {
                     Block b = (Block)this.platform.get(i);
                     b.setType(Material.AIR);
-                    b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() - 1, b.getLocation().getBlockZ());
-                    b.setType(Material.DOUBLE_STONE_SLAB2);
+                    b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() + heightDelta, b.getLocation().getBlockZ());
+                    b.setType(Material.DOUBLE_STEP);
                     // BlockState bs = b.getState();
                     // MaterialData bd = bs.getData();
                     // Slab s = (Slab)bd;
@@ -136,7 +136,7 @@ public class Platform
                     this.lowCorner.setY(b.getLocation().getBlockY());
                     this.highCorner.setY(b.getLocation().getBlockY());
                 }
-                updateSign(this.platformSign.getY() - 1);
+                updateSign(this.platformSign.getY() + heightDelta);
             }
             List<Player> players = this.world.getPlayers();
             for (Player player : players) {
