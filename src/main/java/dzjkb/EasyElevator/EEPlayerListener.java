@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockRedstoneEvent;
+// import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.Material;
 
@@ -32,7 +32,7 @@ public class EEPlayerListener
     {
         Block clicked = event.getClickedBlock();
 
-        if (clicked != null && clicked.getType() == Material.SIGN) {
+        if (clicked != null && clicked.getType() == Material.WALL_SIGN) {
             Player player = event.getPlayer();
             EEPermissionManager pm = new EEPermissionManager(player);
             Sign sign = (Sign)clicked.getState();
@@ -49,7 +49,7 @@ public class EEPlayerListener
                     if (e.isFloorSign(sign)) {
                         this.ee.dbg("Calling elvator");
                         e.call(sign.getY());
-                        player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "The Elevator has been called");
+                        playerMsg(player, "The Elevator has been called");
                         return;
                     }
                 }
@@ -67,16 +67,20 @@ public class EEPlayerListener
                         int stop = Integer.parseInt(e.getPlatform().getSign().getLine(1));
                         this.ee.dbg("Stopping at " + String.valueOf(stop));
                         e.stopAt(stop);
-                        player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Stopping at floor " + stop);
+                        playerMsg(player, "Stopping at floor " + stop);
                     }
                 }
                 else {
-                    player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "You don't have permission to do this");
+                    playerMsg(player, "You don't have permission to do this");
                 }
 
                 return;
             }
         }
+    }
+
+    private void playerMsg(Player player, String msg) {
+        player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + msg);
     }
 
     // @EventHandler

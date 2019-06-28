@@ -280,14 +280,18 @@ public class Platform
     {
         Block signBlock = this.world.getBlockAt(this.platformSign.getX(), height, this.platformSign.getZ());
 
-        signBlock.setType(Material.WALL_SIGN);
         Sign nSign = (Sign)signBlock.getState();
+        // This fix doesn't work lmao, y u do this
+        // if (signBlock.getRelative(((org.bukkit.material.Sign)nSign.getData()).getAttachedFace()).getType() == Material.AIR) {
+        signBlock.setType(Material.WALL_SIGN);
         nSign.getData().setData(this.platformSign.getData().getData());
         nSign.setLine(0, this.platformSign.getLine(0));
         nSign.setLine(1, this.platformSign.getLine(1));
         nSign.setLine(2, this.platformSign.getLine(2));
         nSign.setLine(3, this.platformSign.getLine(3));
         nSign.update();
+        // }
+
         this.platformSign.getBlock().setType(Material.AIR);
         this.platformSign = nSign;
     }

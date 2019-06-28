@@ -81,6 +81,9 @@ public class Elevator
         int[] lowDims = getEndpoints(low);
         int[] highDims = getEndpoints(high);
 
+        for (int xd : lowDims) this.plugin.dbg(String.valueOf(xd));
+        for (int xd : highDims) this.plugin.dbg(String.valueOf(xd));
+
         if (!Arrays.equals(lowDims, highDims)) {
             initFailure("unaligned upper and lower border");
         }
@@ -215,210 +218,9 @@ public class Elevator
 
         this.isInitialized = true;
         this.plugin.getLogger().info("An elevator has been initialized");
-
-        // Block b1 = null;
-        // Block b2 = null; // diagonal blocks of the floor
-        // for (int i = this.lowestPoint; i < this.highestPoint; ++i)
-        // {
-        //     Location currLoc = new Location(this.world, this.attached.getLocation().getBlockX(), i, this.attached.getLocation().getBlockZ());
-        //     Block target = this.world.getBlockAt(currLoc);
-        //     if (isFloor(target))
-        //     {
-        //         // This fucking big ass shit loop goes around the iron ring designating a
-        //         // new floor and adds each block to a collection until it comes back
-        //         // to the original block (!start.equals(t))
-        //         //
-        //         // come on
-
-        //         int dirChange = 0;
-
-        //         String dir = "";
-
-        //         List<Block> blocks = new ArrayList<Block>();
-        //         Block start = target;
-        //         Block t = null;
-
-        //         b2 = null;
-        //         b1 = null;
-        //         do
-        //         {
-        //             Block temp = null;
-        //             if (t == null)
-        //             {
-        //                 if (temp == null)
-        //                 {
-        //                     temp = checkForIron(start, start.getRelative(0, 0, 1), blocks);
-        //                     if (temp != null)
-        //                     {
-        //                         t = temp;
-        //                         if (dirChanged(dir, "East")) {
-        //                             dirChange++;
-        //                         }
-        //                         dir = "East";
-        //                     }
-        //                 }
-        //                 if (temp == null)
-        //                 {
-        //                     temp = checkForIron(start, start.getRelative(0, 0, -1), blocks);
-        //                     if (temp != null)
-        //                     {
-        //                         t = temp;
-        //                         if (dirChanged(dir, "West")) {
-        //                             dirChange++;
-        //                         }
-        //                         dir = "West";
-        //                     }
-        //                 }
-        //                 if (temp == null)
-        //                 {
-        //                     temp = checkForIron(start, start.getRelative(1, 0, 0), blocks);
-        //                     if (temp != null)
-        //                     {
-        //                         t = temp;
-        //                         if (dirChanged(dir, "North")) {
-        //                             dirChange++;
-        //                         }
-        //                         dir = "North";
-        //                     }
-        //                 }
-        //                 if (temp == null)
-        //                 {
-        //                     temp = checkForIron(start, start.getRelative(-1, 0, 0), blocks);
-        //                     if (temp != null)
-        //                     {
-        //                         t = temp;
-        //                         if (dirChanged(dir, "South")) {
-        //                             dirChange++;
-        //                         }
-        //                         dir = "South";
-        //                     }
-        //                 }
-        //             }
-        //             else if (t != null)
-        //             {
-        //                 if (temp == null)
-        //                 {
-        //                     temp = checkForIron(start, t.getRelative(0, 0, 1), blocks);
-        //                     if (temp != null)
-        //                     {
-        //                         t = temp;
-        //                         if (dirChanged(dir, "East")) {
-        //                             dirChange++;
-        //                         }
-        //                         dir = "East";
-        //                     }
-        //                 }
-        //                 if (temp == null)
-        //                 {
-        //                     temp = checkForIron(start, t.getRelative(0, 0, -1), blocks);
-        //                     if (temp != null)
-        //                     {
-        //                         t = temp;
-        //                         if (dirChanged(dir, "West")) {
-        //                             dirChange++;
-        //                         }
-        //                         dir = "West";
-        //                     }
-        //                 }
-        //                 if (temp == null)
-        //                 {
-        //                     temp = checkForIron(start, t.getRelative(1, 0, 0), blocks);
-        //                     if (temp != null)
-        //                     {
-        //                         t = temp;
-        //                         if (dirChanged(dir, "North")) {
-        //                             dirChange++;
-        //                         }
-        //                         dir = "North";
-        //                     }
-        //                 }
-        //                 if (temp == null)
-        //                 {
-        //                     temp = checkForIron(start, t.getRelative(-1, 0, 0), blocks);
-        //                     if (temp != null)
-        //                     {
-        //                         t = temp;
-        //                         if (dirChanged(dir, "South")) {
-        //                             dirChange++;
-        //                         }
-        //                         dir = "South";
-        //                     }
-        //                 }
-        //             }
-        //             if (temp == null) {
-        //                 initFailure("incomplete floor border");
-        //             }
-        //             if (dirChange == 1) {
-        //                 if (b1 == null) {
-        //                     b1 = (Block)blocks.get(blocks.size() - 1);
-        //                 }
-        //             }
-        //             if (dirChange == 3) {
-        //                 if (b2 == null) {
-        //                     b2 = (Block)blocks.get(blocks.size() - 1);
-        //                 }
-        //             }
-        //             blocks.add(temp);
-        //         } while (!start.equals(t));
-        //         if (blocks.size() > this.maxPerimeter) {
-        //             initFailure("floor perimeter exceeds maxPerimeter");
-        //         }
-        //         if (blocks.contains(target))
-        //         {
-        //             if ((b1 == null) || (b2 == null)) {
-        //                 initFailure("a corner block is missing after trying to initialize");
-        //             }
-        //             if ((dirChange != 4) && (dirChange != 3)) {
-        //                 initFailure("improper floor border shape");
-        //             }
-        //             Sign callSign = getCallSign(b1.getLocation(), b2.getLocation());
-        //             if (callSign != null)
-        //             {
-        //                 Floor floor = new Floor(this, b1.getLocation(), b2.getLocation(), callSign, floorCount + 1);
-        //                 this.floors.add(floor);
-        //                 floorCount++;
-        //             }
-        //         }
-        //         else
-        //         {
-        //             initFailure("floor border does not wrap back around");
-        //         }
-        //     }
-        // }
-        // if (this.floors.size() > this.maxFloors) {
-        //     initFailure("too many floors");
-        // }
-        // this.platform = new Platform(this.plugin, b1.getLocation(), b2.getLocation(), ((Floor)this.floors.get(0)).getHeight(), ((Floor)this.floors.get(this.floors.size() - 1)).getHeight());
-        // if (!this.platform.isInitialized()) {
-        //     initFailure("failed to initialize platform");
-        // }
-        // this.isInitialized = true;
-        // this.plugin.getLogger().info("An elevator has been initialized");
     }
 
-    private Sign getCallSign(Location lowCorner, Location highCorner)
-    {
-        // BlockFace[] faces = new BlockFace[4];
-        // faces[0] = BlockFace.NORTH;
-        // faces[1] = BlockFace.EAST;
-        // faces[2] = BlockFace.SOUTH;
-        // faces[3] = BlockFace.WEST;
-
-        // int x1 = lowCorner.getBlockX();
-        // int z1 = lowCorner.getBlockZ();
-        // int x2 = highCorner.getBlockX();
-        // int z2 = highCorner.getBlockZ();
-
-        // int xStart = Math.min(x1, x2) - 1;
-        // int xEnd = Math.max(x1, x2) + 1;
-        // int zStart = Math.min(z1, z2) - 1;
-        // int zEnd = Math.max(z1, z2) + 1;
-
-        // this.xLow = xStart;
-        // this.xHigh = xEnd;
-        // this.zLow = zStart;
-        // this.zHigh = zEnd;
-
+    private Sign getCallSign(Location lowCorner, Location highCorner) {
         this.plugin.dbg("entering getCallSign()");
         int xStart = lowCorner.getBlockX();
         int xEnd = highCorner.getBlockX();
@@ -523,7 +325,7 @@ public class Elevator
 
     int lcount = 0;
 
-    public void run_refactored() {
+    public void run() {
         this.plugin.dbg("Running elevator");
 
         if (this.lcount == 6) {
@@ -608,90 +410,90 @@ public class Elevator
         this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 100L);
     }
 
-    public void run() {
-        if (this.lcount == 6) {
-            this.lcount = 0;
-        }
-        updateDirection();
-        updateFloorIndicators();
-        if (!this.hasOpenDoor)
-        {
-            if (!this.platform.isStuck())
-            {
-                if (this.stops.contains(this.platform.getHeight()))
-                {
-                    for (Floor f : this.floors) {
-                        if (f.getHeight() == this.platform.getHeight()) {
-                            this.currentFloor = f;
-                        }
-                    }
-                    if (this.currentFloor != null)
-                    {
-                        if (this.cfg.playArrivalSound) {
-                            this.currentFloor.playOpenSound();
-                        }
-                        // this.currentFloor.switchRedstoneFloorOn(true);
-                        this.currentFloor.openDoor();
-                        this.hasOpenDoor = true;
-                        this.currentFloor.setCalled(false);
-                        this.platform.stopTeleport();
-                        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 100L);
-                    }
-                }
-                else
-                {
-                    if (!this.direction.equals("")) {
-                        if (this.currentFloor != null)
-                        {
-                            // this.currentFloor.switchRedstoneFloorOn(false);
-                            this.currentFloor = null;
-                        }
-                    }
-                    if (this.direction.equals("DOWN"))
-                    {
-                        this.platform.moveDown(this.lcount);
-                        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
-                        this.lcount += 1;
-                    }
-                    else if (!this.direction.equals("UP"))
-                    {
-                        this.isMoving = false;
-                        return;
-                    }
-                    if (this.direction.equals("UP"))
-                    {
-                        this.platform.moveUp(this.lcount);
-                        this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
-                        this.lcount += 1;
-                    }
-                    else if (!this.direction.equals("DOWN"))
-                    {
-                        this.isMoving = false;
-                    }
-                }
-            }
-            else
-            {
-                if (this.direction.equals("UP")) {
-                    this.direction = "DOWN";
-                } else {
-                    this.direction = "UP";
-                }
-                this.stops.clear();
-                addStops(getFloorNumberFromHeight(getNextFloorHeight_2()));
-                this.platform.setStuck(false);
-                this.platform.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "The Elevator is stuck. Resetting...");
-                this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 50L);
-            }
-        }
-        else if (this.currentFloor != null)
-        {
-            this.currentFloor.closeDoor();
-            this.hasOpenDoor = false;
-            removeCurrentFloor();
-            this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 5L);
-        }
-    }
+    // public void run() {
+    //     if (this.lcount == 6) {
+    //         this.lcount = 0;
+    //     }
+    //     updateDirection();
+    //     updateFloorIndicators();
+    //     if (!this.hasOpenDoor)
+    //     {
+    //         if (!this.platform.isStuck())
+    //         {
+    //             if (this.stops.contains(this.platform.getHeight()))
+    //             {
+    //                 for (Floor f : this.floors) {
+    //                     if (f.getHeight() == this.platform.getHeight()) {
+    //                         this.currentFloor = f;
+    //                     }
+    //                 }
+    //                 if (this.currentFloor != null)
+    //                 {
+    //                     if (this.cfg.playArrivalSound) {
+    //                         this.currentFloor.playOpenSound();
+    //                     }
+    //                     // this.currentFloor.switchRedstoneFloorOn(true);
+    //                     this.currentFloor.openDoor();
+    //                     this.hasOpenDoor = true;
+    //                     this.currentFloor.setCalled(false);
+    //                     this.platform.stopTeleport();
+    //                     this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 100L);
+    //                 }
+    //             }
+    //             else
+    //             {
+    //                 if (!this.direction.equals("")) {
+    //                     if (this.currentFloor != null)
+    //                     {
+    //                         // this.currentFloor.switchRedstoneFloorOn(false);
+    //                         this.currentFloor = null;
+    //                     }
+    //                 }
+    //                 if (this.direction.equals("DOWN"))
+    //                 {
+    //                     this.platform.moveDown(this.lcount);
+    //                     this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
+    //                     this.lcount += 1;
+    //                 }
+    //                 else if (!this.direction.equals("UP"))
+    //                 {
+    //                     this.isMoving = false;
+    //                     return;
+    //                 }
+    //                 if (this.direction.equals("UP"))
+    //                 {
+    //                     this.platform.moveUp(this.lcount);
+    //                     this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
+    //                     this.lcount += 1;
+    //                 }
+    //                 else if (!this.direction.equals("DOWN"))
+    //                 {
+    //                     this.isMoving = false;
+    //                 }
+    //             }
+    //         }
+    //         else
+    //         {
+    //             if (this.direction.equals("UP")) {
+    //                 this.direction = "DOWN";
+    //             } else {
+    //                 this.direction = "UP";
+    //             }
+    //             this.stops.clear();
+    //             addStops(getFloorNumberFromHeight(getNextFloorHeight_2()));
+    //             this.platform.setStuck(false);
+    //             this.platform.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "The Elevator is stuck. Resetting...");
+    //             this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 50L);
+    //         }
+    //     }
+    //     else if (this.currentFloor != null)
+    //     {
+    //         this.currentFloor.closeDoor();
+    //         this.hasOpenDoor = false;
+    //         removeCurrentFloor();
+    //         this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 5L);
+    //     }
+    // }
 
     public void changeFloor()
     {
