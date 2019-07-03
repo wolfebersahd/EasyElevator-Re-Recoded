@@ -89,7 +89,7 @@ public class Platform
                         this.highCorner.setY(i);
                     }
                     else if (this.platform.size() != 0) {
-                        this.plugin.dbg("Non stone slab block found, aborting platform initialization");
+                        this.plugin.dbg("incomplete platform found, aborting initialization");
                         return;
                     }
                 }
@@ -280,10 +280,10 @@ public class Platform
     {
         Block signBlock = this.world.getBlockAt(this.platformSign.getX(), height, this.platformSign.getZ());
 
+        signBlock.setType(Material.WALL_SIGN);
         Sign nSign = (Sign)signBlock.getState();
         // This fix doesn't work lmao, y u do this
         // if (signBlock.getRelative(((org.bukkit.material.Sign)nSign.getData()).getAttachedFace()).getType() == Material.AIR) {
-        signBlock.setType(Material.WALL_SIGN);
         nSign.getData().setData(this.platformSign.getData().getData());
         nSign.setLine(0, this.platformSign.getLine(0));
         nSign.setLine(1, this.platformSign.getLine(1));

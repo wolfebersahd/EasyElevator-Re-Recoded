@@ -64,12 +64,6 @@ public class Elevator
         initializeLift();
     }
 
-    private void dbg(String msg) {
-        if (this.debug) {
-            this.plugin.getLogger().info(msg);
-        }
-    }
-
     private void initFailure(String msg) {
         throw new RuntimeException("Failed to initialize an elevator: " + msg);
     }
@@ -103,12 +97,12 @@ public class Elevator
             initFailure("too long on the z dimension");
         }
 
-        dbg("xLow: " + String.valueOf(this.xLow));
-        dbg("xHigh: " + String.valueOf(this.xHigh));
-        dbg("yLow: " + String.valueOf(this.yLow));
-        dbg("yHigh: " + String.valueOf(this.yHigh));
-        dbg("zLow: " + String.valueOf(this.zLow));
-        dbg("zHigh: " + String.valueOf(this.zHigh));
+        this.plugin.dbg("xLow: " + String.valueOf(this.xLow));
+        this.plugin.dbg("xHigh: " + String.valueOf(this.xHigh));
+        this.plugin.dbg("yLow: " + String.valueOf(this.yLow));
+        this.plugin.dbg("yHigh: " + String.valueOf(this.yHigh));
+        this.plugin.dbg("zLow: " + String.valueOf(this.zLow));
+        this.plugin.dbg("zHigh: " + String.valueOf(this.zHigh));
     }
 
     private int getLowPoint() {
@@ -170,7 +164,7 @@ public class Elevator
             Block b = this.world.getBlockAt(this.xLow, i, this.zLow);
             if (isFloor(b)) {
                 addFloor(i, ++floorCount);
-                dbg("added floor " + String.valueOf(floorCount));
+                this.plugin.dbg("added floor " + String.valueOf(floorCount));
             }
         }
 
@@ -209,7 +203,7 @@ public class Elevator
     }
 
     private void initializeLift() {
-        dbg("Initializing new elevator");
+        this.plugin.dbg("Initializing new elevator");
 
         int floorCount = 0;
         detectDimensions();
