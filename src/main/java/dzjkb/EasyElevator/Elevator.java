@@ -19,7 +19,6 @@ import dzjkb.EasyElevator.EEConfiguration;
 public class Elevator
         implements Runnable
 {
-    // public EasyElevator plugin;
     private EEConfiguration cfg;
     private EasyElevator plugin;
     private World world;
@@ -29,7 +28,6 @@ public class Elevator
 
     private int maxFloors;
     private int maxPerimeter;
-    private boolean debug;
 
     private int xLow;
     private int xHigh;
@@ -225,10 +223,6 @@ public class Elevator
             for (int x = xStart - 1; x <= xEnd + 1; ++x) {
                 for (int z = zStart - 1; z <= zEnd + 1; ++z) {
                     Block b = this.world.getBlockAt(x, y, z);
-                    // this.dbg("Checking block at " + String.valueOf(x) +
-                    //          " " + String.valueOf(y) +
-                    //          " " + String.valueOf(z) +
-                    //          " of type " + b.getType().toString());
                     if (
                         b.getType().equals(Material.WALL_SIGN) &&
                         (x == xStart - 1 || x == xEnd + 1 || z == zStart - 1 || z == zEnd + 1)
@@ -240,32 +234,6 @@ public class Elevator
         }
         return null;
     }
-
-    // private boolean dirChanged(String dir, String newDir) {
-    //     return !dir.equals("") && !dir.equals(newDir);
-    // }
-
-    // private Block checkForIron(Block start, Block t, List<Block> blocks) {
-    //     // if (isFloor(t) || isOutputDoor(t) || isOutputFloor(t))
-    //     // {
-    //     //     if (start.equals(t) && blocks.size() <= 4) {
-    //     //         return null;
-    //     //     }
-    //     //     if (!blocks.contains(t)) {
-    //     //         return t;
-    //     //     }
-    //     // }
-    //     // return null;
-
-    //     if (
-    //         (isFloor(t) || isOutputDoor(t) || isOutputFloor(t)) &&
-    //         !blocks.contains(t) &&
-    //         !(start.equals(t) && blocks.size() <= 4)
-    //     )
-    //         return t;
-
-    //     return null; 
-    // }
 
     public void addStops(int floor) {
         int height = -1;
@@ -290,7 +258,7 @@ public class Elevator
         }
     }
 
-    // height here refers to the absolute height of the floor sign ???
+    // height here refers to the absolute height of the floor sign
     public void call(int height) {
         boolean hasHeight = false;
         Floor f = null;
@@ -396,98 +364,13 @@ public class Elevator
         if (this.cfg.playArrivalSound) {
             this.currentFloor.playOpenSound();
         }
-        // this.currentFloor.switchRedstoneFloorOn(true);
+        this.currentFloor.switchRedstoneFloorOn(true);
         this.currentFloor.openDoor();
         this.hasOpenDoor = true;
         this.currentFloor.setCalled(false);
         this.platform.stopTeleport();
         this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 100L);
     }
-
-    // public void run() {
-    //     if (this.lcount == 6) {
-    //         this.lcount = 0;
-    //     }
-    //     updateDirection();
-    //     updateFloorIndicators();
-    //     if (!this.hasOpenDoor)
-    //     {
-    //         if (!this.platform.isStuck())
-    //         {
-    //             if (this.stops.contains(this.platform.getHeight()))
-    //             {
-    //                 for (Floor f : this.floors) {
-    //                     if (f.getHeight() == this.platform.getHeight()) {
-    //                         this.currentFloor = f;
-    //                     }
-    //                 }
-    //                 if (this.currentFloor != null)
-    //                 {
-    //                     if (this.cfg.playArrivalSound) {
-    //                         this.currentFloor.playOpenSound();
-    //                     }
-    //                     // this.currentFloor.switchRedstoneFloorOn(true);
-    //                     this.currentFloor.openDoor();
-    //                     this.hasOpenDoor = true;
-    //                     this.currentFloor.setCalled(false);
-    //                     this.platform.stopTeleport();
-    //                     this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 100L);
-    //                 }
-    //             }
-    //             else
-    //             {
-    //                 if (!this.direction.equals("")) {
-    //                     if (this.currentFloor != null)
-    //                     {
-    //                         // this.currentFloor.switchRedstoneFloorOn(false);
-    //                         this.currentFloor = null;
-    //                     }
-    //                 }
-    //                 if (this.direction.equals("DOWN"))
-    //                 {
-    //                     this.platform.moveDown(this.lcount);
-    //                     this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
-    //                     this.lcount += 1;
-    //                 }
-    //                 else if (!this.direction.equals("UP"))
-    //                 {
-    //                     this.isMoving = false;
-    //                     return;
-    //                 }
-    //                 if (this.direction.equals("UP"))
-    //                 {
-    //                     this.platform.moveUp(this.lcount);
-    //                     this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
-    //                     this.lcount += 1;
-    //                 }
-    //                 else if (!this.direction.equals("DOWN"))
-    //                 {
-    //                     this.isMoving = false;
-    //                 }
-    //             }
-    //         }
-    //         else
-    //         {
-    //             if (this.direction.equals("UP")) {
-    //                 this.direction = "DOWN";
-    //             } else {
-    //                 this.direction = "UP";
-    //             }
-    //             this.stops.clear();
-    //             addStops(getFloorNumberFromHeight(getNextFloorHeight_2()));
-    //             this.platform.setStuck(false);
-    //             this.platform.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "The Elevator is stuck. Resetting...");
-    //             this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 50L);
-    //         }
-    //     }
-    //     else if (this.currentFloor != null)
-    //     {
-    //         this.currentFloor.closeDoor();
-    //         this.hasOpenDoor = false;
-    //         removeCurrentFloor();
-    //         this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 5L);
-    //     }
-    // }
 
     public void changeFloor()
     {
@@ -784,5 +667,9 @@ public class Elevator
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void updateConfig(EEConfiguration newCfg) {
+        this.cfg = newCfg;
     }
 }

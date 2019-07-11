@@ -13,7 +13,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-// import org.bukkit.block.data.Openable;
 import org.bukkit.material.Door;
 import org.bukkit.material.MaterialData;
 
@@ -21,7 +20,7 @@ import org.bukkit.material.MaterialData;
 
 public class Floor
 {
-    // private Elevator elevator;
+    private Elevator elevator;
     private Location l1;
     private Location l2;
     private World world;
@@ -32,15 +31,15 @@ public class Floor
     private boolean hasOpenDoors = false;
     // private Material outputDoorMat = null;
     // private byte outputDoorData = 0;
-    // private Material outputFloorMat = null;
-    // private BlockState outputFloorData = null;
+    private Material outputFloorMat = null;
+    private BlockState outputFloorData = null;
     private List<Block> doorOpenBlock = new ArrayList();
     // private List<Block> redstoneOutDoorBlock = new ArrayList();
-    // private List<Block> redstoneOutFloorBlock = new ArrayList();
+    private List<Block> redstoneOutFloorBlock = new ArrayList();
 
     public Floor(Elevator elv, Location l1, Location l2, Sign callSign, int floor)
     {
-        // this.elevator = elv;
+        this.elevator = elv;
         this.l1 = l1;
         this.l2 = l2;
         this.world = l1.getWorld();
@@ -134,48 +133,48 @@ public class Floor
     //     }
     // }
 
-    // public void switchRedstoneFloorOn(boolean b)
-    // {
-    //     int x1 = this.l1.getBlockX();
-    //     int z1 = this.l1.getBlockZ();
+    public void switchRedstoneFloorOn(boolean b)
+    {
+        int x1 = this.l1.getBlockX();
+        int z1 = this.l1.getBlockZ();
 
-    //     int x2 = this.l2.getBlockX();
-    //     int z2 = this.l2.getBlockZ();
+        int x2 = this.l2.getBlockX();
+        int z2 = this.l2.getBlockZ();
 
-    //     int xStart = Math.min(x1, x2);
-    //     int xEnd = Math.max(x1, x2);
-    //     int zStart = Math.min(z1, z2);
-    //     int zEnd = Math.max(z1, z2);
+        int xStart = Math.min(x1, x2);
+        int xEnd = Math.max(x1, x2);
+        int zStart = Math.min(z1, z2);
+        int zEnd = Math.max(z1, z2);
 
-    //     for (int x = xStart; x <= xEnd; x++) {
-    //         for (int z = zStart; z <= zEnd; z++)
-    //         {
-    //             Block tempBlock = this.world.getBlockAt(x, this.l1.getBlockY(), z);
-    //             if ((x == xStart) || (x == xEnd) || (z == zStart) || (z == zEnd)) {
-    //                 if (b)
-    //                 {
-    //                     if (this.elevator.isOutputFloor(tempBlock))
-    //                     {
-    //                         this.outputFloorMat = tempBlock.getType();
-    //                         tempBlock.setType(Material.REDSTONE_TORCH_ON);
-    //                         this.redstoneOutFloorBlock.add(tempBlock);
+        for (int x = xStart; x <= xEnd; x++) {
+            for (int z = zStart; z <= zEnd; z++)
+            {
+                Block tempBlock = this.world.getBlockAt(x, this.l1.getBlockY(), z);
+                if ((x == xStart) || (x == xEnd) || (z == zStart) || (z == zEnd)) {
+                    if (b)
+                    {
+                        if (this.elevator.isOutputFloor(tempBlock))
+                        {
+                            this.outputFloorMat = tempBlock.getType();
+                            tempBlock.setType(Material.REDSTONE_TORCH_ON);
+                            this.redstoneOutFloorBlock.add(tempBlock);
                             
-    //                     }
-    //                 }
-    //                 else if ((this.elevator.isOutputFloor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH_ON))) {
-    //                     if (this.redstoneOutFloorBlock.contains(tempBlock))
-    //                     {
-    //                         tempBlock.setType(this.outputFloorMat);
-    //                         this.redstoneOutFloorBlock.remove(tempBlock);
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     if (!b) {
-    //         this.redstoneOutFloorBlock = new ArrayList();
-    //     }
-    // }
+                        }
+                    }
+                    else if ((this.elevator.isOutputFloor(tempBlock)) || (tempBlock.getType().equals(Material.REDSTONE_TORCH_ON))) {
+                        if (this.redstoneOutFloorBlock.contains(tempBlock))
+                        {
+                            tempBlock.setType(this.outputFloorMat);
+                            this.redstoneOutFloorBlock.remove(tempBlock);
+                        }
+                    }
+                }
+            }
+        }
+        if (!b) {
+            this.redstoneOutFloorBlock = new ArrayList();
+        }
+    }
 
     public void openDoor()
     {
@@ -184,26 +183,14 @@ public class Floor
             for (Block block : this.doorOpenBlock) {
             	BlockState bs = block.getState();
             	Door d = (Door)bs.getData();
-                // BlockState bd = bs.getData();
-            	// Openable o = (Openable) bd;
             	if (!d.isOpen()) {
             		d.setOpen(true);
             		bs.setData(d);
             		bs.update();
             	}
-    //        	BlockState state = block.getState();
-    //        	Openable openable = (Openable) state.getData();
-    //        	openable.setOpen(true);
-    //        	state.setData((MaterialData) openable);
-    //        	state.update();
-    //        	Door d = (Door) block.getState().getData();
-    //        	d.setOpen(true);
-                /*if (block.getData() <= 3) {
-                    block.setData((byte)(block.getData() + 4));
-                }*/
             }
         } catch (Exception e) {
-            // the doors got fucked, who needs them anyway
+            // rip doors, who needs them anyway
             return;
         }
         this.hasOpenDoors = true;
@@ -215,27 +202,14 @@ public class Floor
             for (Block block : this.doorOpenBlock) {
             	BlockState bs = block.getState();
             	Door d = (Door)bs.getData();
-            	// Openable o = (Openable) bd;
-            	// Door d = (Door) o;
             	if (d.isOpen()) {
             		d.setOpen(false);
             		bs.setData(d);
             		bs.update();
             	}
-    //        	Openable openable = (Openable) state.getData();
-    //        	openable.setOpen(false);
-    //        	state.setData((MaterialData) openable);
-    //        	state.update();
-    //        	Door d = (Door) block.getState().getData();
-    //            d.setOpen(false);
-                	
-                
-            	/*if (block.getData() >= 4) {
-                    block.setData((byte)(block.getData() - 4));
-                }*/
             }
         } catch (Exception e) {
-            // the doors got fucked, who needs them anyway
+            // rip doors, who needs them anyway
             return;
         }
         this.hasOpenDoors = false;

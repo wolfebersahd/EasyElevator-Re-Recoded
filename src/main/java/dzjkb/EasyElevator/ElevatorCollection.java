@@ -25,6 +25,12 @@ public class ElevatorCollection
         return;
     }
 
+    public void updateConfig(EEConfiguration newCfg) {
+        for (Elevator e : this.elevators) {
+            e.updateConfig(newCfg);
+        }
+    }
+
     public Sign getSurroundingElevatorSign(Player player)
     {
         Location loc = player.getLocation();

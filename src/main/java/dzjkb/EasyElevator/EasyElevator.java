@@ -35,11 +35,11 @@ public class EasyElevator
 
     public void onDisable() {
         getLogger().info("Disabling EasyElevator :(");
-        // for (Elevator e : this.elevators.getElevators()) {
-        //     if (e.currentFloor != null) {
-        //         e.currentFloor.switchRedstoneFloorOn(false);
-        //     }
-        // }
+        for (Elevator e : this.elevators.getElevators()) {
+            if (e.currentFloor != null) {
+                e.currentFloor.switchRedstoneFloorOn(false);
+            }
+        }
         getLogger().info("EasyElevator disabled!");
     }
 
@@ -50,6 +50,7 @@ public class EasyElevator
         // playerListener, elevators
 
         this.playerListener.updateConfig(this.config);
+        this.elevators.updateConfig(this.config);
     }
 
     public ElevatorCollection getElevators() {

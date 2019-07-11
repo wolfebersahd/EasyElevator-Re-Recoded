@@ -18,6 +18,6 @@ In `config.yml` you can change all the configurable parameters of EasyElevator, 
 
 # Usage
 
-For plugin usage, refer to the tutorial below (TODO):
+For plugin usage and functionality, refer to the tutorial below (TODO):
 
-[Tutorial](https://www.youtube.com/watch?v=SBeYzoQPbu8)
+[![Tutorial](https://img.youtube.com/vi/SBeYzoQPbu8/0.jpg)](https://www.youtube.com/watch?v=SBeYzoQPbu8)

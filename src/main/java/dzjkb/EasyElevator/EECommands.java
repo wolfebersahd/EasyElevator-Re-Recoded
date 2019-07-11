@@ -103,9 +103,9 @@ public class EECommands implements CommandExecutor {
         this.ee.dbg("command reload activated");
         this.ee.reloadEEConfig();
         for (Elevator e : this.ee.getElevators().getElevators()) {
-            // if (e.currentFloor != null) {
-            //     e.currentFloor.switchRedstoneFloorOn(false);
-            // }
+            if (e.currentFloor != null) {
+                e.currentFloor.switchRedstoneFloorOn(false);
+            }
         }
         this.ee.getElevators().getElevators().clear();
         player.sendMessage(ChatColor.DARK_GRAY +

@@ -9,13 +9,9 @@ import dzjkb.EasyElevator.EasyElevator;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-// import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-// import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-// import org.bukkit.material.MaterialData;
-// import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -139,12 +135,6 @@ public class Platform
                     b.setType(Material.AIR);
                     b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() + heightDelta, b.getLocation().getBlockZ());
                     b.setType(Material.DOUBLE_STEP);
-                    // BlockState bs = b.getState();
-                    // MaterialData bd = bs.getData();
-                    // Slab s = (Slab)bd;
-                    // s.setType(Slab.Type.DOUBLE);
-                    // bs.setBlockData(s);
-                    // bs.update();
                     this.platform.remove(i);
                     this.platform.add(i, b);
                     this.lowCorner.setY(b.getLocation().getBlockY());
@@ -184,89 +174,6 @@ public class Platform
         move(lcount, true);
     }
 
-    // public void moveDown(int lcount)
-    // {
-    //     if (canMove(this.lowCorner.getBlockY() - 1))
-    //     {
-    //         this.isStuck = false;
-    //         if (lcount == 5)
-    //         {
-    //             for (int i = 0; i < this.platform.size(); i++)
-    //             {
-    //                 Block b = (Block)this.platform.get(i);
-    //                 b.setType(Material.AIR);
-    //                 b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() - 1, b.getLocation().getBlockZ());
-    //                 b.setType(Material.STONE_SLAB);
-    //                 BlockState bs = b.getState();
-    //                 BlockData bd = bs.getBlockData();
-    //                 Slab s = (Slab) bd;
-    //                 s.setType(Slab.Type.DOUBLE);
-    //                 bs.setBlockData(s);
-    //                 bs.update();
-    //                 this.platform.remove(i);
-    //                 this.platform.add(i, b);
-    //                 this.lowCorner.setY(b.getLocation().getBlockY());
-    //                 this.highCorner.setY(b.getLocation().getBlockY());
-    //             }
-    //             updateSign(this.platformSign.getY() - 1);
-    //         }
-    //         List<Player> players = this.world.getPlayers();
-    //         for (Player player : players) {
-    //             if (hasPlayer(player))
-    //             {
-    //                 player.setVelocity(new Vector(0.0D, -0.17D, 0.0D));
-    //                 player.setFallDistance(0.0F);
-    //             }
-    //         }
-    //     }
-    //     else
-    //     {
-    //         this.isStuck = true;
-    //     }
-    // }
-
-    // public void moveUp(int lcount)
-    // {
-    //     if (canMove(this.lowCorner.getBlockY() + 3))
-    //     {
-    //         if (lcount == 5)
-    //         {
-    //             for (int i = 0; i < this.platform.size(); i++)
-    //             {
-    //                 Block b = (Block)this.platform.get(i);
-    //                 b.setType(Material.AIR);
-    //                 b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() + 1, b.getLocation().getBlockZ());
-    //                 b.setType(Material.STONE_SLAB);
-    //                 BlockState bs = b.getState();
-    //                 BlockData bd = bs.getBlockData();
-    //                 Slab s = (Slab) bd;
-    //                 s.setType(Slab.Type.DOUBLE);
-    //                 bs.setBlockData(s);
-    //                 bs.update();
-    //                 this.platform.remove(i);
-    //                 this.platform.add(i, b);
-    //                 this.lowCorner.setY(b.getLocation().getBlockY());
-    //                 this.highCorner.setY(b.getLocation().getBlockY());
-    //             }
-    //             updateSign(this.platformSign.getY() + 1);
-    //         }
-    //         List<Player> players = this.world.getPlayers();
-    //         for (Player player : players) {
-    //             if (hasPlayer(player))
-    //             {
-    //                 player.setVelocity(new Vector(0.0D, 0.17D, 0.0D));
-    //                 player.setFallDistance(0.0F);
-    //                 moveUpCorrection(player);
-    //             }
-    //         }
-    //         this.isStuck = false;
-    //     }
-    //     else
-    //     {
-    //         this.isStuck = true;
-    //     }
-    // }
-
     private void moveUpCorrection(Player player)
     {
         Location pLoc = player.getLocation();
@@ -296,13 +203,11 @@ public class Platform
 
         newSignBlock.setType(Material.WALL_SIGN);
         Sign newSign = (Sign)newSignBlock.getState();
-        // Sign currSign = (Sign)this.platformSign.getState();
         newSign.getData().setData(this.platformSignData);
         newSign.setLine(0, this.platformMsg[0]);
         newSign.setLine(1, this.platformMsg[1]);
         newSign.setLine(2, this.platformMsg[2]);
         newSign.setLine(3, this.platformMsg[3]);
-        // This fix doesn't work lmao, y u do this
         this.plugin.dbg(newSignBlock.getRelative(((org.bukkit.material.Sign)newSign.getData()).getAttachedFace()).getType().toString());
         if (newSignBlock.getRelative(((org.bukkit.material.Sign)newSign.getData()).getAttachedFace()).getType() == Material.AIR) {
             newSignBlock.setType(Material.AIR);
