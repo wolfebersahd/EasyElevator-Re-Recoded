@@ -32,6 +32,8 @@ public class Platform
     private boolean isInitialized = false;
     private boolean isStuck = false;
     private Block platformSign = null;
+    private String platformMsg[] = new String[4];
+    private byte platformSignData;
     private Location lowCorner;
     private Location highCorner;
     private List<Block> platform = new ArrayList<>();
@@ -108,11 +110,18 @@ public class Platform
         }
         this.isInitialized = true;
 
+        this.platformMsg[0] = "[EElevator]";
+        this.platformMsg[1] = "1";
+        this.platformMsg[2] = "";
+        this.platformMsg[3] = "";
+
+        // TODO add check to guarantee this condition, extract this into some function
         if (this.platformSign.getState() instanceof Sign) {
             Sign signState = (Sign)this.platformSign.getState();
             signState.setLine(0, ChatColor.DARK_GRAY + "[EElevator]");
             signState.setLine(1, "1");
-            signState.update();    
+            this.platformSignData = signState.getData().getData();
+            signState.update();
         } 
     }
 
@@ -287,17 +296,18 @@ public class Platform
 
         newSignBlock.setType(Material.WALL_SIGN);
         Sign newSign = (Sign)newSignBlock.getState();
+        // Sign currSign = (Sign)this.platformSign.getState();
+        newSign.getData().setData(this.platformSignData);
+        newSign.setLine(0, this.platformMsg[0]);
+        newSign.setLine(1, this.platformMsg[1]);
+        newSign.setLine(2, this.platformMsg[2]);
+        newSign.setLine(3, this.platformMsg[3]);
         // This fix doesn't work lmao, y u do this
-        if (newSignBlock.getRelative(((org.bukkit.material.Sign)newSign.getData()).getAttachedFace()).getType() != Material.AIR) {
-            Sign currSign = (Sign)this.platformSign.getState();
-            newSign.getData().setData(currSign.getData().getData());
-            newSign.setLine(0, currSign.getLine(0));
-            newSign.setLine(1, currSign.getLine(1));
-            newSign.setLine(2, currSign.getLine(2));
-            newSign.setLine(3, currSign.getLine(3));
-            newSign.update();
-        } else {
+        this.plugin.dbg(newSignBlock.getRelative(((org.bukkit.material.Sign)newSign.getData()).getAttachedFace()).getType().toString());
+        if (newSignBlock.getRelative(((org.bukkit.material.Sign)newSign.getData()).getAttachedFace()).getType() == Material.AIR) {
             newSignBlock.setType(Material.AIR);
+        } else {
+            newSign.update();
         }
 
         this.platformSign.setType(Material.AIR);
@@ -382,6 +392,7 @@ public class Platform
 
     public void writeSign(int line, String message)
     {
+        this.platformMsg[line] = message;
         if (this.platformSign.getState() instanceof Sign) {
             Sign s = (Sign)this.platformSign.getState();
             s.setLine(line, message);
