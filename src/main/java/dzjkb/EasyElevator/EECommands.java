@@ -129,7 +129,7 @@ public class EECommands implements CommandExecutor {
         if (success) {
             player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "The Elevator has been called");
         } else {
-            player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "No Elevator in range");
+            player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Failed to call an elevator - out of range or incomplete");
         }
     }
 

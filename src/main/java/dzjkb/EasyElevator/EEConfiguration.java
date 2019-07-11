@@ -16,4 +16,19 @@ public class EEConfiguration {
     public boolean debug = true;
 
     public EEConfiguration() {}
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("maxPerimeter = " + String.valueOf(this.maxPerimeter) + "\n");
+        sb.append("maxFloors = " + String.valueOf(this.maxFloors) + "\n");
+        sb.append("playArrivalSound = " + String.valueOf(this.playArrivalSound) + "\n");
+        sb.append("sendArrivalMessage = " + String.valueOf(this.sendArrivalMessage) + "\n");
+        sb.append("blockBorder = " + String.valueOf(this.blockBorder) + "\n");
+        sb.append("blockFloor = " + String.valueOf(this.blockFloor) + "\n");
+        sb.append("blockOutputDoor = " + String.valueOf(this.blockOutputDoor) + "\n");
+        sb.append("blockOutputFloor = " + String.valueOf(this.blockOutputFloor) + "\n");
+        sb.append("debug = " + String.valueOf(this.debug) + "\n");
+
+        return sb.toString();
+    }
 }

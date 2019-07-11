@@ -208,7 +208,6 @@ public class Platform
         newSign.setLine(1, this.platformMsg[1]);
         newSign.setLine(2, this.platformMsg[2]);
         newSign.setLine(3, this.platformMsg[3]);
-        this.plugin.dbg(newSignBlock.getRelative(((org.bukkit.material.Sign)newSign.getData()).getAttachedFace()).getType().toString());
         if (newSignBlock.getRelative(((org.bukkit.material.Sign)newSign.getData()).getAttachedFace()).getType() == Material.AIR) {
             newSignBlock.setType(Material.AIR);
         } else {

@@ -54,7 +54,6 @@ public class Elevator
         this.sign = s;
         this.maxFloors = cfg.maxFloors;
         this.maxPerimeter = cfg.maxPerimeter;
-        this.debug = cfg.debug;
 
         org.bukkit.material.Sign signData = (org.bukkit.material.Sign)s.getData();
         this.attached = s.getBlock().getRelative(signData.getAttachedFace());
@@ -70,11 +69,8 @@ public class Elevator
         int low = getLowPoint();
         int high = getHighPoint();
 
-        int[] lowDims = getEndpoints(low);
-        int[] highDims = getEndpoints(high);
-
-        for (int xd : lowDims) this.plugin.dbg(String.valueOf(xd));
-        for (int xd : highDims) this.plugin.dbg(String.valueOf(xd));
+        int[] lowDims = getXZEndpoints(low);
+        int[] highDims = getXZEndpoints(high);
 
         if (!Arrays.equals(lowDims, highDims)) {
             initFailure("unaligned upper and lower border");
@@ -139,7 +135,7 @@ public class Elevator
         return high;
     }
 
-    private int[] getEndpoints(int y) {
+    private int[] getXZEndpoints(int y) {
         int x = this.attached.getLocation().getBlockX();
         int z = this.attached.getLocation().getBlockZ();
 
@@ -204,16 +200,22 @@ public class Elevator
         this.plugin.dbg("Initializing new elevator");
 
         int floorCount = 0;
-        detectDimensions();
-        detectFloors();
-        initPlatform();
 
-        this.isInitialized = true;
-        this.plugin.getLogger().info("An elevator has been initialized");
+        try {
+            detectDimensions();
+            detectFloors();
+            initPlatform();
+
+            this.isInitialized = true;
+            this.plugin.getLogger().info("An elevator has been initialized");
+        } catch(Exception ex) {
+            this.plugin.dbg("Failed to initialize elevator: " + ex.getMessage());
+            // just in case
+            this.isInitialized = false;
+        }
     }
 
     private Sign getCallSign(Location lowCorner, Location highCorner) {
-        this.plugin.dbg("entering getCallSign()");
         int xStart = lowCorner.getBlockX();
         int xEnd = highCorner.getBlockX();
         int zStart = lowCorner.getBlockZ();
@@ -288,8 +290,6 @@ public class Elevator
     int lcount = 0;
 
     public void run() {
-        this.plugin.dbg("Running elevator");
-
         if (this.lcount == 6) {
             this.lcount = 0;
         }
@@ -304,8 +304,6 @@ public class Elevator
             removeCurrentFloor();
             this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 5L);
         } else if (!this.hasOpenDoor) {
-            this.plugin.dbg("Door is closed, trying to move");
-
             if (this.platform.isStuck()) {
                 this.plugin.dbg("Platform stuck");
                 if (this.direction.equals("UP")) {
@@ -325,7 +323,6 @@ public class Elevator
     }
 
     private void doElevatorAction() {
-        this.plugin.dbg("Trying to move");
         if (this.stops.contains(this.platform.getHeight())) {
             for (Floor f : this.floors) {
                 if (f.getHeight() == this.platform.getHeight()) {
@@ -337,21 +334,18 @@ public class Elevator
         } else {
             switch (this.direction) {
                 case "UP":
-                    this.plugin.dbg("Moving up");
                     this.platform.moveUp(this.lcount);
                     this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
                     this.lcount += 1;
                 break;
 
                 case "DOWN":
-                    this.plugin.dbg("Moving down");
                     this.platform.moveDown(this.lcount);
                     this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 1L);
                     this.lcount += 1;
                 break;
 
                 default:
-                    this.plugin.dbg("Not moving");
                     this.isMoving = false;
             }
         }
@@ -644,7 +638,7 @@ public class Elevator
     }
 
     public boolean isFloor(Block b) {
-        return checkMaterial(b, this.cfg.blockFloor);
+        return checkMaterial(b, this.cfg.blockFloor) || checkMaterial(b, this.cfg.blockOutputFloor);
     }
 
     public boolean isOutputFloor(Block b) {

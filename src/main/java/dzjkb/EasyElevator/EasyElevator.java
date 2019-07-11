@@ -46,6 +46,8 @@ public class EasyElevator
     public void reloadEEConfig() {
         this.config = this.configManager.loadConfig();
 
+        this.dbg("Got config:\n" + this.config.toString());
+
         // Propagate the config change to any classes that need it
         // playerListener, elevators
 

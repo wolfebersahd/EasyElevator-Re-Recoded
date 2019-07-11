@@ -64,8 +64,6 @@ public class ElevatorCollection
                     if ((b.getType().equals(Material.WALL_SIGN) || b.getType().equals(Material.SIGN)))
                     { 
                         Sign sign = (Sign)b.getState();
-                        // TODO replace with isEESign?
-                        // if (sign.getLine(0).equals(ChatColor.DARK_GRAY + "[EElevator]") &&
                         if (EEUtils.isEESign(sign) && !isAnyPlatformSign(sign)) {
                             return sign;
                         }
