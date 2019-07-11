@@ -31,7 +31,7 @@ public class Platform
     private int zmax;
     private boolean isInitialized = false;
     private boolean isStuck = false;
-    private Sign platformSign = null;
+    private Block platformSign = null;
     private Location lowCorner;
     private Location highCorner;
     private List<Block> platform = new ArrayList<>();
@@ -83,7 +83,8 @@ public class Platform
                                 ", " + String.valueOf(i + 2) +
                                 ", " + String.valueOf(z));
 
-                            this.platformSign = (Sign)signBlock.getState();
+                            // this.platformSign = (Sign)signBlock.getState();
+                            this.platformSign = signBlock;
                         }
                         this.lowCorner.setY(i);
                         this.highCorner.setY(i);
@@ -106,9 +107,13 @@ public class Platform
             return;
         }
         this.isInitialized = true;
-        this.platformSign.setLine(0, ChatColor.DARK_GRAY + "[EElevator]");
-        this.platformSign.setLine(1, "1");
-        this.platformSign.update();
+
+        if (this.platformSign.getState() instanceof Sign) {
+            Sign signState = (Sign)this.platformSign.getState();
+            signState.setLine(0, ChatColor.DARK_GRAY + "[EElevator]");
+            signState.setLine(1, "1");
+            signState.update();    
+        } 
     }
 
     private void move(int lcount, boolean up)
@@ -278,22 +283,25 @@ public class Platform
 
     private void updateSign(int height)
     {
-        Block signBlock = this.world.getBlockAt(this.platformSign.getX(), height, this.platformSign.getZ());
+        Block newSignBlock = this.world.getBlockAt(this.platformSign.getX(), height, this.platformSign.getZ());
 
-        signBlock.setType(Material.WALL_SIGN);
-        Sign nSign = (Sign)signBlock.getState();
+        newSignBlock.setType(Material.WALL_SIGN);
+        Sign newSign = (Sign)newSignBlock.getState();
         // This fix doesn't work lmao, y u do this
-        // if (signBlock.getRelative(((org.bukkit.material.Sign)nSign.getData()).getAttachedFace()).getType() == Material.AIR) {
-        nSign.getData().setData(this.platformSign.getData().getData());
-        nSign.setLine(0, this.platformSign.getLine(0));
-        nSign.setLine(1, this.platformSign.getLine(1));
-        nSign.setLine(2, this.platformSign.getLine(2));
-        nSign.setLine(3, this.platformSign.getLine(3));
-        nSign.update();
-        // }
+        if (newSignBlock.getRelative(((org.bukkit.material.Sign)newSign.getData()).getAttachedFace()).getType() != Material.AIR) {
+            Sign currSign = (Sign)this.platformSign.getState();
+            newSign.getData().setData(currSign.getData().getData());
+            newSign.setLine(0, currSign.getLine(0));
+            newSign.setLine(1, currSign.getLine(1));
+            newSign.setLine(2, currSign.getLine(2));
+            newSign.setLine(3, currSign.getLine(3));
+            newSign.update();
+        } else {
+            newSignBlock.setType(Material.AIR);
+        }
 
-        this.platformSign.getBlock().setType(Material.AIR);
-        this.platformSign = nSign;
+        this.platformSign.setType(Material.AIR);
+        this.platformSign = newSignBlock;
     }
 
     public boolean canMove(int height)
@@ -345,7 +353,11 @@ public class Platform
 
     public Sign getSign()
     {
-        return this.platformSign;
+        if (this.platformSign.getState() instanceof Sign) {
+            return (Sign)this.platformSign.getState();
+        }
+        
+        return null;
     }
 
     public boolean isInitialized()
@@ -370,7 +382,10 @@ public class Platform
 
     public void writeSign(int line, String message)
     {
-        this.platformSign.setLine(line, message);
-        this.platformSign.update();
+        if (this.platformSign.getState() instanceof Sign) {
+            Sign s = (Sign)this.platformSign.getState();
+            s.setLine(line, message);
+            s.update();
+        }
     }
 }

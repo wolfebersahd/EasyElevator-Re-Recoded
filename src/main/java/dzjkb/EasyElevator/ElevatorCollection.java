@@ -72,7 +72,7 @@ public class ElevatorCollection
 
     private boolean isAnyPlatformSign(Sign s) {
         for (Elevator e : this.elevators) {
-            if (e.getPlatform().getSign().equals(s)) {
+            if (s.equals(e.getPlatform().getSign())) {
                 return true;
             }
         }

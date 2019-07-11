@@ -621,9 +621,7 @@ public class Elevator
         // - Else set direction to none
 
         int height = this.platform.getHeight();
-        for (Iterator<Integer> localIterator = this.stops.iterator(); localIterator.hasNext();)
-        {
-            int i = localIterator.next().intValue();
+        for (int i : this.stops) {
             if (this.direction.equals("DOWN")) {
                 if (i < height) {
                     return;
@@ -634,8 +632,7 @@ public class Elevator
                     return;
                 }
             }
-            if (this.direction.equals(""))
-            {
+            if (this.direction.equals("")) {
                 if (i > height) {
                     this.direction = "UP";
                 } else {
@@ -644,19 +641,16 @@ public class Elevator
                 return;
             }
         }
-        if (this.stops.size() > 0)
-        {
-            if (this.direction.equals("DOWN"))
-            {
+        if (this.stops.size() > 0) {
+            if (this.direction.equals("DOWN")) {
                 this.direction = "UP";
                 return;
             }
             if (this.direction.equals("UP")) {
                 this.direction = "DOWN";
+                return;
             }
-        }
-        else
-        {
+        } else {
             this.direction = "";
         }
     }
@@ -665,12 +659,10 @@ public class Elevator
     {
         int curr = getCurrentFloor();
         for (int i = 0; i < this.floors.size(); i++) {
-            if (curr != -1)
-            {
+            if (curr != -1) {
                 this.floors.get(i).writeSign(2, ""+curr);
             }
-            else
-            {
+            else {
                 if (this.direction.equals("UP")) {
                     this.floors.get(i).writeSign(2, "/\\");
                 }
@@ -679,12 +671,10 @@ public class Elevator
                 }
             }
         }
-        if (curr != -1)
-        {
+        if (curr != -1) {
             this.platform.writeSign(2, ""+ curr);
         }
-        else
-        {
+        else {
             if (this.direction.equals("UP")) {
                 this.platform.writeSign(2, "/\\");
             }
@@ -731,7 +721,7 @@ public class Elevator
         for (int i = 0; i < this.floors.size(); i++)
         {
             Floor f = (Floor)this.floors.get(i);
-            if (f.getSign().equals(sign)) {
+            if (sign.equals(f.getSign())) {
                 return true;
             }
         }
@@ -740,7 +730,7 @@ public class Elevator
 
     public boolean isPlatformSign(org.bukkit.block.Sign sign)
     {
-        if (this.platform.getSign().equals(sign)) {
+        if (sign.equals(this.platform.getSign())) {
             return true;
         }
         return false;
