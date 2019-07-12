@@ -644,10 +644,6 @@ public class Elevator
         return checkMaterial(b, this.cfg.blockOutputFloor);
     }
 
-    public boolean isOutputDoor(Block b) {
-        return checkMaterial(b, this.cfg.blockOutputDoor);
-    }
-
     private boolean checkMaterial(Block b, String material) {
         try {
             Material m = Material.getMaterial(material);

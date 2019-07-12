@@ -41,7 +41,6 @@ public class EEConfigurationManager
         cfg.blockBorder = readString("blocks.border");
         cfg.blockFloor = readString("blocks.floor");
         cfg.blockOutputFloor = readString("blocks.outputFloor");
-        cfg.blockOutputDoor = readString("blocks.outputDoor");
 
         return cfg;
     }

@@ -11,7 +11,6 @@ public class EEConfiguration {
     public boolean sendArrivalMessage = true;
     public String blockBorder = "GOLD_BLOCK";
     public String blockFloor = "IRON_BLOCK";
-    public String blockOutputDoor = "RED_WOOL";
     public String blockOutputFloor = "ORANGE_WOOL";
     public boolean debug = true;
 
@@ -25,7 +24,6 @@ public class EEConfiguration {
         sb.append("sendArrivalMessage = " + String.valueOf(this.sendArrivalMessage) + "\n");
         sb.append("blockBorder = " + String.valueOf(this.blockBorder) + "\n");
         sb.append("blockFloor = " + String.valueOf(this.blockFloor) + "\n");
-        sb.append("blockOutputDoor = " + String.valueOf(this.blockOutputDoor) + "\n");
         sb.append("blockOutputFloor = " + String.valueOf(this.blockOutputFloor) + "\n");
         sb.append("debug = " + String.valueOf(this.debug) + "\n");
 
