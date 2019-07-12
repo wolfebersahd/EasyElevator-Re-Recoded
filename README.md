@@ -2,6 +2,8 @@
 
 Welcome to EasyElevator Recoded - a continuation of the [continuation of the popular EasyElevator plugin!](https://www.spigotmc.org/resources/easyelevator-1-11.40360/)
 
+The official home server of EasyElevator Recoded is Farland (mc.farland.ca) - use `/warp easyelevator` to give it a spin.
+
 
 # Installation
 
