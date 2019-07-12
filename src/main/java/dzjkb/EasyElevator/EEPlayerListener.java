@@ -1,6 +1,5 @@
 package dzjkb.EasyElevator;
 
-import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -9,6 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.Material;
+
+import dzjkb.EasyElevator.EEUtils;
 
 public class EEPlayerListener
         implements Listener
@@ -44,11 +45,11 @@ public class EEPlayerListener
 
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 this.ee.dbg("It's a right click!");
-                if ((pm.has("easyelevator.call.sign")) || (pm.has("easyelevator.call.*"))) {
+                if (pm.has(EEPermissions.CALL_SIGN) || pm.has(EEPermissions.CALL_ALL) || pm.has(EEPermissions.CALL)) {
                     if (e.isFloorSign(sign)) {
                         this.ee.dbg("Calling elvator");
                         e.call(sign.getY());
-                        playerMsg(player, "The Elevator has been called");
+                        EEUtils.playerMsg(player, "The Elevator has been called");
                         return;
                     }
                 }
@@ -61,24 +62,20 @@ public class EEPlayerListener
 
             if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 this.ee.dbg("It's a left click!");
-                if ((pm.has("easyelevator.stop.sign")) || (pm.has("easyelevator.stop.*"))) {
+                if (pm.has(EEPermissions.STOP_SIGN) || pm.has(EEPermissions.STOP_ALL) || pm.has(EEPermissions.STOP)) {
                     if (e.isPlatformSign(sign)) {
                         int stop = Integer.parseInt(e.getPlatform().getSign().getLine(1));
                         this.ee.dbg("Stopping at " + String.valueOf(stop));
                         e.stopAt(stop);
-                        playerMsg(player, "Stopping at floor " + stop);
+                        EEUtils.playerMsg(player, "Stopping at floor " + stop);
                     }
                 }
                 else {
-                    playerMsg(player, "You don't have permission to do this");
+                    EEUtils.playerMsg(player, "You don't have permission to do this");
                 }
 
                 return;
             }
         }
-    }
-
-    private void playerMsg(Player player, String msg) {
-        player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + msg);
     }
 }

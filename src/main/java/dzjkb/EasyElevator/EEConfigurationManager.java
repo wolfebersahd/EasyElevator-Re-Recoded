@@ -23,6 +23,8 @@ public class EEConfigurationManager
             this.ee.saveDefaultConfig();
         }
 
+        this.ee.reloadConfig();
+
         return loadValues();
     }
 

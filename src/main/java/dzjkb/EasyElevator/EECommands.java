@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.block.Sign;
 
 import dzjkb.EasyElevator.EasyElevator;
+import dzjkb.EasyElevator.EEUtils;
+import dzjkb.EasyElevator.EEPermissions;
 
 public class EECommands implements CommandExecutor {
 
@@ -18,10 +20,7 @@ public class EECommands implements CommandExecutor {
     }
 
     private void noPerms(Player p) {
-        p.sendMessage(
-            ChatColor.DARK_GRAY + "[EasyElevator] " + ChatColor.GRAY +
-            "You don't have permission to do this"
-        );
+        EEUtils.playerMsg(p, "You don't have permission to do this");
     }
 
     private void help(Player p) {
@@ -67,7 +66,7 @@ public class EECommands implements CommandExecutor {
             case "reload":
                 if (args.length != 1)
                     help(player);
-                else if (!pm.has("easyelevator.reload"))
+                else if (!pm.has(EEPermissions.RELOAD))
                     noPerms(player);
                 else
                     cmdReload(player);
@@ -76,7 +75,7 @@ public class EECommands implements CommandExecutor {
             case "call":
                 if (args.length != 1)
                     help(player);
-                else if (!(pm.has("easyelevator.call") || pm.has("easyelevator.call.*")))
+                else if (!(pm.has(EEPermissions.CALL) || pm.has(EEPermissions.CALL_ALL)))
                     noPerms(player);
                 else
                     cmdCall(player);
@@ -85,7 +84,7 @@ public class EECommands implements CommandExecutor {
             case "stop":
                 if (args.length != 1 && args.length != 2)
                     help(player);
-                else if (!(pm.has("easyelevator.stop.cmd") || pm.has("easyelevator.stop.*")))
+                else if (!(pm.has(EEPermissions.STOP_CMD) || pm.has(EEPermissions.STOP_ALL)))
                     noPerms(player);
                 else if (args.length == 1)
                     cmdStop(player);
@@ -108,9 +107,7 @@ public class EECommands implements CommandExecutor {
             }
         }
         this.ee.getElevators().getElevators().clear();
-        player.sendMessage(ChatColor.DARK_GRAY +
-                "[EasyElevator] " + ChatColor.GRAY +
-                "The plugin has been reloaded");
+        EEUtils.playerMsg(player, "The plugin has been reloaded");
     }
 
     private void cmdCall(Player player) {
@@ -127,9 +124,9 @@ public class EECommands implements CommandExecutor {
             }
         }
         if (success) {
-            player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "The Elevator has been called");
+            EEUtils.playerMsg(player, "The Elevator has been called");
         } else {
-            player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Failed to call an elevator - out of range or incomplete");
+            EEUtils.playerMsg(player, "Failed to call an elevator - out of range or incomplete");
         }
     }
 
@@ -144,7 +141,7 @@ public class EECommands implements CommandExecutor {
                 if (target != -1)
                 {
                     e.addStops(target);
-                    player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Stopping at floor " + target);
+                    EEUtils.playerMsg(player, "Stopping at floor " + target);
                     break;
                 }
             }
@@ -163,17 +160,17 @@ public class EECommands implements CommandExecutor {
                 {
                     if ((target > e.getFloors().size()) || (target < 1))
                     {
-                        player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Floor '" + target + "' is not in range");
+                        EEUtils.playerMsg(player, "Floor '" + target + "' is not in range");
                     }
                     e.addStops(target);
-                    player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Stopping at floor " + target);
+                    EEUtils.playerMsg(player, "Stopping at floor " + target);
                     i = this.ee.getElevators().getElevators().size();
                 }
             }
         }
         catch (Exception e)
         {
-            player.sendMessage(ChatColor.DARK_GRAY + "[EElevator] " + ChatColor.GRAY + "Floor '" + arg + "' is not a valid value");
+            EEUtils.playerMsg(player, "Floor '" + arg + "' is not a valid value");
         }
     }
 }

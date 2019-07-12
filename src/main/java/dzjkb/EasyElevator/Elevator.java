@@ -2,7 +2,6 @@ package dzjkb.EasyElevator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -10,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
@@ -300,6 +298,7 @@ public class Elevator
         if (this.hasOpenDoor && this.currentFloor != null) {
             this.plugin.dbg("Door is open, closing");
             this.currentFloor.closeDoor();
+            this.currentFloor.switchRedstoneFloorOn(false);
             this.hasOpenDoor = false;
             removeCurrentFloor();
             this.plugin.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, this, 5L);
@@ -650,14 +649,14 @@ public class Elevator
     }
 
     private boolean checkMaterial(Block b, String material) {
-        try
-        {
+        try {
             Material m = Material.getMaterial(material);
             if (m != null && m == b.getType()) {
                 return true;
             }
         }
         catch (Exception e) {
+            this.plugin.dbg("Exception in Elevator::checkMaterial()");
             e.printStackTrace();
         }
         return false;

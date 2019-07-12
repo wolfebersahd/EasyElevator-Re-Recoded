@@ -2,10 +2,11 @@ package dzjkb.EasyElevator;
 
 import org.bukkit.entity.Player;
 
+import dzjkb.EasyElevator.EEPermissions;
+
 public class EEPermissionManager
 {
     Player player;
-    public static String admin = "easyelevator.admin";
 
     public EEPermissionManager(Player p)
     {
@@ -25,6 +26,6 @@ public class EEPermissionManager
         if (this.player.isOp()) {
             return true;
         }
-        return this.player.hasPermission(admin);
+        return this.player.hasPermission(EEPermissions.ADMIN);
     }
 }
