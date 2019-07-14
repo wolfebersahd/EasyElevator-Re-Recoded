@@ -190,7 +190,7 @@ public class Platform
         int y = player.getLocation().getBlockY();
         int z = player.getLocation().getBlockZ();
         if ((y >= this.ymin + 5) || (y <= this.ymax + 2)) {
-            if ((z >= this.zmin) && (z <= this.zmax) && (x >= this.xmin) && (x <= this.ymax)) {
+            if (z > this.zmin && z < this.zmax && x > this.xmin && x < this.xmax) {
                 return true;
             }
         }
