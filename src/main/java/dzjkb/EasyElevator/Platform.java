@@ -69,10 +69,10 @@ public class Platform
                 for (int z = zStart; z <= zEnd; z++) {
                     Block tempBlock = this.world.getBlockAt(x, i, z);
                     Block signBlock = this.world.getBlockAt(x, i + 2, z);
-                    this.plugin.dbg("Checking at " + String.valueOf(x) +
-                                    " " + String.valueOf(i) +
-                                    " " + String.valueOf(z) +
-                                    ", type " + tempBlock.getType().toString());
+                    // this.plugin.dbg("Checking at " + String.valueOf(x) +
+                                    // " " + String.valueOf(i) +
+                                    // " " + String.valueOf(z) +
+                                    // ", type " + tempBlock.getType().toString());
                     if (tempBlock.getType() == Material.DOUBLE_STEP) {
                         this.platform.add(tempBlock);
                         if ((signBlock.getState() instanceof Sign)) {
