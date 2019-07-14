@@ -351,8 +351,10 @@ public class Elevator
     }
 
     private void doFloor() {
-        if (this.currentFloor == null)
+        if (this.currentFloor == null) {
+            this.plugin.dbg("Current floor is null");
             return;
+        }
 
         if (this.cfg.playArrivalSound) {
             this.currentFloor.playOpenSound();
