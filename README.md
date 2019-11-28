@@ -42,6 +42,6 @@ For available strings referring to Materials in the current version (1.12), visi
 
 # Usage
 
-For plugin usage and functionality, refer to the tutorial below (TODO):
+For plugin usage and functionality, refer to the tutorial below:
 
-[![Tutorial](https://img.youtube.com/vi/SBeYzoQPbu8/0.jpg)](https://www.youtube.com/watch?v=SBeYzoQPbu8)
+[![Tutorial](https://img.youtube.com/vi/r4gagDp9kMg/0.jpg)](https://www.youtube.com/watch?v=r4gagDp9kMg)
