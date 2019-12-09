@@ -53,8 +53,8 @@ public class Elevator
         this.maxFloors = cfg.maxFloors;
         this.maxPerimeter = cfg.maxPerimeter;
 
-        org.bukkit.material.Sign signData = (org.bukkit.material.Sign)s.getData();
-        this.attached = s.getBlock().getRelative(signData.getAttachedFace());
+        org.bukkit.block.data.type.WallSign signData = (org.bukkit.block.data.type.WallSign)s.getBlockData();
+        this.attached = s.getBlock().getRelative(signData.getFacing().getOppositeFace());
 
         initializeLift();
     }

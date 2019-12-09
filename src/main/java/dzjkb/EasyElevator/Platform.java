@@ -14,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.bukkit.block.data.type.Slab;
 
 public class Platform
 {
@@ -73,7 +74,7 @@ public class Platform
                                     // " " + String.valueOf(i) +
                                     // " " + String.valueOf(z) +
                                     // ", type " + tempBlock.getType().toString());
-                    if (tempBlock.getType() == Material.DOUBLE_STEP) {
+                    if (tempBlock.getType() == Material.STONE_SLAB && ((Slab)tempBlock.getBlockData()).getType() == Slab.Type.DOUBLE) {
                         this.platform.add(tempBlock);
                         if ((signBlock.getState() instanceof Sign)) {
                             this.plugin.dbg(
@@ -134,7 +135,8 @@ public class Platform
                     Block b = (Block)this.platform.get(i);
                     b.setType(Material.AIR);
                     b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() + heightDelta, b.getLocation().getBlockZ());
-                    b.setType(Material.DOUBLE_STEP);
+                    b.setType(Material.STONE_SLAB);
+                    ((Slab)b.getBlockData()).setType(Slab.Type.DOUBLE);
                     this.platform.remove(i);
                     this.platform.add(i, b);
                     this.lowCorner.setY(b.getLocation().getBlockY());

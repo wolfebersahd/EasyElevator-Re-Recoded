@@ -13,6 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.Lightable;
 import org.bukkit.material.Door;
 import org.bukkit.material.MaterialData;
 
@@ -79,14 +80,10 @@ public class Floor
                     if (tempBlock.getType().equals(Material.ACACIA_DOOR) || 
                     	tempBlock.getType().equals(Material.BIRCH_DOOR) || 
                     	tempBlock.getType().equals(Material.DARK_OAK_DOOR) ||
-                    	tempBlock.getType().equals(Material.WOOD_DOOR) ||
-                        tempBlock.getType().equals(Material.WOODEN_DOOR) ||
                     	tempBlock.getType().equals(Material.JUNGLE_DOOR) ||
                     	tempBlock.getType().equals(Material.SPRUCE_DOOR) ||
-                    	tempBlock.getType().equals(Material.IRON_DOOR) ||
-                        tempBlock.getType().equals(Material.IRON_DOOR_BLOCK)){
+                    	tempBlock.getType().equals(Material.IRON_DOOR))
                         this.doorOpenBlock.add(tempBlock);
-                    }
                 }
             }
         }
@@ -152,10 +149,12 @@ public class Floor
                     Block block = this.world.getBlockAt(x, this.l1.getBlockY(), z);
                     if (b && this.elevator.isOutputFloor(block)) {
                         this.outputFloorMat = block.getType();
-                        block.setType(Material.REDSTONE_TORCH_ON);
+                        block.setType(Material.REDSTONE_TORCH);
+                        ((Lightable)block.getBlockData()).setLit(true);
                         this.redstoneOutFloorBlock.add(block);
                     }
-                    else if ((this.elevator.isOutputFloor(block) || block.getType().equals(Material.REDSTONE_TORCH_ON)) &&
+                    else if (
+                        (this.elevator.isOutputFloor(block) || (block.getType().equals(Material.REDSTONE_TORCH) && ((Lightable)block.getBlockData()).isLit())) &&
                              this.redstoneOutFloorBlock.contains(block)) {
                         block.setType(this.outputFloorMat);
                         this.redstoneOutFloorBlock.remove(block);
@@ -294,7 +293,7 @@ public class Floor
         for (Block block : this.doorOpenBlock)
         {
             Location loc = block.getLocation();
-            loc.getWorld().playSound(loc, Sound.BLOCK_NOTE_PLING, 1.0F, 0.0F);
+            loc.getWorld().playSound(loc, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0F, 0.0F);
         }
     }
 }
