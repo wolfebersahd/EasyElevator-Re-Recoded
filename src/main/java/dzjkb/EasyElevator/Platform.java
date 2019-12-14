@@ -15,6 +15,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.bukkit.block.data.type.Slab;
+import org.bukkit.block.data.type.WallSign;
 
 public class Platform
 {
@@ -30,7 +31,7 @@ public class Platform
     private boolean isStuck = false;
     private Block platformSign = null;
     private String platformMsg[] = new String[4];
-    private byte platformSignData;
+    private WallSign platformSignData;
     private Location lowCorner;
     private Location highCorner;
     private List<Block> platform = new ArrayList<>();
@@ -117,7 +118,7 @@ public class Platform
             Sign signState = (Sign)this.platformSign.getState();
             signState.setLine(0, ChatColor.DARK_GRAY + "[EElevator]");
             signState.setLine(1, "1");
-            this.platformSignData = signState.getData().getData();
+            this.platformSignData = (WallSign)this.platformSign.getBlockData();
             signState.update();
         } 
     }
@@ -136,7 +137,9 @@ public class Platform
                     b.setType(Material.AIR);
                     b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() + heightDelta, b.getLocation().getBlockZ());
                     b.setType(Material.STONE_SLAB);
-                    ((Slab)b.getBlockData()).setType(Slab.Type.DOUBLE);
+                    Slab bd = (Slab)b.getBlockData();
+                    bd.setType(Slab.Type.DOUBLE);
+                    b.setBlockData(bd);
                     this.platform.remove(i);
                     this.platform.add(i, b);
                     this.lowCorner.setY(b.getLocation().getBlockY());
@@ -204,13 +207,13 @@ public class Platform
         Block newSignBlock = this.world.getBlockAt(this.platformSign.getX(), height, this.platformSign.getZ());
 
         newSignBlock.setType(Material.WALL_SIGN);
+        newSignBlock.setBlockData(this.platformSignData);
         Sign newSign = (Sign)newSignBlock.getState();
-        newSign.getData().setData(this.platformSignData);
         newSign.setLine(0, this.platformMsg[0]);
         newSign.setLine(1, this.platformMsg[1]);
         newSign.setLine(2, this.platformMsg[2]);
         newSign.setLine(3, this.platformMsg[3]);
-        if (newSignBlock.getRelative(((org.bukkit.material.Sign)newSign.getData()).getAttachedFace()).getType() == Material.AIR) {
+        if (newSignBlock.getRelative(this.platformSignData.getFacing().getOppositeFace()).getType() == Material.AIR) {
             newSignBlock.setType(Material.AIR);
         } else {
             newSign.update();
