@@ -12,4 +12,4 @@ arrival:
 blocks:
   border: "GOLD_BLOCK"
   floor: "IRON_BLOCK"
-  outputFloor: "WOOL"
+  outputFloor: "WHITE_WOOL"

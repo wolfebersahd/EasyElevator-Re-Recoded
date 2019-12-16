@@ -14,7 +14,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.Lightable;
-import org.bukkit.material.Door;
+import org.bukkit.block.data.type.Door;
 import org.bukkit.material.MaterialData;
 
 
@@ -216,12 +216,11 @@ public class Floor
     public void setDoor(boolean open) {
         try {
             for (Block block : this.doorOpenBlock) {
-                BlockState bs = block.getState();
-                Door d = (Door)bs.getData();
-                if (d.isOpen() ^ open) {
-                    d.setOpen(open);
-                    bs.setData(d);
-                    bs.update();
+                // BlockState bs = block.getState();
+                Door bd = (Door)block.getBlockData();
+                // Door d = (Door)bs.getData();
+                if (bd.isOpen() ^ open) {
+                    bd.setOpen(open);
                 }
             }
         } catch (Exception e) {
