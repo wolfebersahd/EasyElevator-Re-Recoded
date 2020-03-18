@@ -75,7 +75,7 @@ public class Platform
                                     // " " + String.valueOf(i) +
                                     // " " + String.valueOf(z) +
                                     // ", type " + tempBlock.getType().toString());
-                    if (tempBlock.getType() == Material.STONE_SLAB && ((Slab)tempBlock.getBlockData()).getType() == Slab.Type.DOUBLE) {
+                    if (tempBlock.getType() == Material.SMOOTH_STONE_SLAB && ((Slab)tempBlock.getBlockData()).getType() == Slab.Type.DOUBLE) {
                         this.platform.add(tempBlock);
                         if ((signBlock.getState() instanceof Sign)) {
                             this.plugin.dbg(
@@ -136,7 +136,7 @@ public class Platform
                     Block b = (Block)this.platform.get(i);
                     b.setType(Material.AIR);
                     b = this.world.getBlockAt(b.getLocation().getBlockX(), b.getLocation().getBlockY() + heightDelta, b.getLocation().getBlockZ());
-                    b.setType(Material.STONE_SLAB);
+                    b.setType(Material.SMOOTH_STONE_SLAB);
                     Slab bd = (Slab)b.getBlockData();
                     bd.setType(Slab.Type.DOUBLE);
                     b.setBlockData(bd);

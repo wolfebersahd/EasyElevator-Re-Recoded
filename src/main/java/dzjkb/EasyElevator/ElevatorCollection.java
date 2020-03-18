@@ -101,8 +101,8 @@ public class ElevatorCollection
         this.plugin.dbg("Entering getElevator() with sign at: " + sign.getLocation().toString());
         if (EEUtils.isEESign(sign)) {
             Elevator e = null;
-            org.bukkit.material.Sign signData = (org.bukkit.material.Sign)sign.getData();
-            Block attached = sign.getBlock().getRelative(signData.getAttachedFace());
+            org.bukkit.block.data.type.WallSign signData = (org.bukkit.block.data.type.WallSign)sign.getBlockData();
+            Block attached = sign.getBlock().getRelative(signData.getFacing().getOppositeFace());
 
             for (int i = 0; i < this.elevators.size(); i++) {
                 if (this.elevators.get(i).isPartOfElevator(attached.getLocation())) {
