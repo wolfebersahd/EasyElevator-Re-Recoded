@@ -61,7 +61,20 @@ public class ElevatorCollection
             for (int y = yStart; y <= yEnd; y++) {
                 for (int z = zStart; z <= zEnd; z++) {
                     Block b = player.getWorld().getBlockAt(x, y, z);
-                    if ((b.getType().equals(Material.WALL_SIGN) || b.getType().equals(Material.SIGN)))
+                    if (b.getType().equals(Material.SPRUCE_WALL_SIGN) ||
+                        b.getType().equals(Material.OAK_WALL_SIGN) ||
+                        b.getType().equals(Material.LEGACY_WALL_SIGN) ||
+                        b.getType().equals(Material.JUNGLE_WALL_SIGN) ||
+                        b.getType().equals(Material.BIRCH_WALL_SIGN) ||
+                        b.getType().equals(Material.ACACIA_WALL_SIGN) ||
+                        b.getType().equals(Material.DARK_OAK_WALL_SIGN) ||
+                        b.getType().equals(Material.SPRUCE_SIGN) ||
+                        b.getType().equals(Material.OAK_SIGN) ||
+                        b.getType().equals(Material.LEGACY_SIGN) ||
+                        b.getType().equals(Material.JUNGLE_SIGN) ||
+                        b.getType().equals(Material.BIRCH_SIGN) ||
+                        b.getType().equals(Material.ACACIA_SIGN) ||
+                        b.getType().equals(Material.DARK_OAK_SIGN))
                     { 
                         Sign sign = (Sign)b.getState();
                         if (EEUtils.isEESign(sign) && !isAnyPlatformSign(sign)) {

@@ -32,7 +32,15 @@ public class EEPlayerListener
     {
         Block clicked = event.getClickedBlock();
 
-        if (clicked != null && clicked.getType() == Material.WALL_SIGN) {
+        if (clicked != null && (
+                clicked.getType() == Material.SPRUCE_WALL_SIGN ||
+                clicked.getType() == Material.OAK_WALL_SIGN ||
+                clicked.getType() == Material.LEGACY_WALL_SIGN ||
+                clicked.getType() == Material.JUNGLE_WALL_SIGN ||
+                clicked.getType() == Material.BIRCH_WALL_SIGN ||
+                clicked.getType() == Material.ACACIA_WALL_SIGN ||
+                clicked.getType() == Material.DARK_OAK_WALL_SIGN)
+            ) {
             Player player = event.getPlayer();
             EEPermissionManager pm = new EEPermissionManager(player);
             Sign sign = (Sign)clicked.getState();

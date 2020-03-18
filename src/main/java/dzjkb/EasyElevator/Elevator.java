@@ -224,7 +224,13 @@ public class Elevator
                 for (int z = zStart - 1; z <= zEnd + 1; ++z) {
                     Block b = this.world.getBlockAt(x, y, z);
                     if (
-                        b.getType().equals(Material.WALL_SIGN) &&
+                        (b.getType().equals(Material.SPRUCE_WALL_SIGN) ||
+                         b.getType().equals(Material.OAK_WALL_SIGN) ||
+                         b.getType().equals(Material.LEGACY_WALL_SIGN) ||
+                         b.getType().equals(Material.JUNGLE_WALL_SIGN) ||
+                         b.getType().equals(Material.BIRCH_WALL_SIGN) ||
+                         b.getType().equals(Material.ACACIA_WALL_SIGN) ||
+                         b.getType().equals(Material.DARK_OAK_WALL_SIGN)) &&
                         (x == xStart - 1 || x == xEnd + 1 || z == zStart - 1 || z == zEnd + 1)
                     ) {
                         return (Sign)b.getState();

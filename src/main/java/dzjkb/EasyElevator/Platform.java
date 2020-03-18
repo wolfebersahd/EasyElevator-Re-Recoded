@@ -206,7 +206,7 @@ public class Platform
     {
         Block newSignBlock = this.world.getBlockAt(this.platformSign.getX(), height, this.platformSign.getZ());
 
-        newSignBlock.setType(Material.WALL_SIGN);
+        newSignBlock.setType(this.platformSign.getType());
         newSignBlock.setBlockData(this.platformSignData);
         Sign newSign = (Sign)newSignBlock.getState();
         newSign.setLine(0, this.platformMsg[0]);
