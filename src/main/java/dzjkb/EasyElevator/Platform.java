@@ -182,9 +182,9 @@ public class Platform
     private void moveUpCorrection(Player player)
     {
         Location pLoc = player.getLocation();
-        if (pLoc.getBlockY() <= this.lowCorner.getBlockY() - 0.5D)
+        if (pLoc.getBlockY() <= this.lowCorner.getBlockY())
         {
-            pLoc.setY(pLoc.getBlockY() + 2);
+            pLoc.setY(pLoc.getBlockY() + 1);
             player.teleport(pLoc);
         }
     }
