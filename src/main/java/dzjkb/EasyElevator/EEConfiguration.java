@@ -12,7 +12,7 @@ public class EEConfiguration {
     public String blockBorder = "GOLD_BLOCK";
     public String blockFloor = "IRON_BLOCK";
     public String blockOutputFloor = "ORANGE_WOOL";
-    public boolean debug = true;
+    public boolean debug = false;
 
     public EEConfiguration() {}
 
