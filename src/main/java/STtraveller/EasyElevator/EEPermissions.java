@@ -1,4 +1,4 @@
-package dzjkb.EasyElevator;
+package STtraveller.EasyElevator;
 
 public class EEPermissions
 {

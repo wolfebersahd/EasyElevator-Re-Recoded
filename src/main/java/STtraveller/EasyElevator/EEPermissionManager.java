@@ -1,8 +1,8 @@
-package dzjkb.EasyElevator;
+package STtraveller.EasyElevator;
 
 import org.bukkit.entity.Player;
 
-import dzjkb.EasyElevator.EEPermissions;
+import STtraveller.EasyElevator.EEPermissions;
 
 public class EEPermissionManager
 {

@@ -1,11 +1,11 @@
 # EasyElevator config
 #
-# Dzjkb
-# jakub.pies@gmail.com
-# April 2019
+# STtraveller
+# https://github.com/STtraveller
+# March 2022
 
 maxPerimeter: 24
-maxFloors: 10
+maxFloors: 40
 arrival:
   playSound: true
   sendMessage: true

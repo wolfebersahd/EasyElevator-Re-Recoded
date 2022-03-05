@@ -1,9 +1,9 @@
-package dzjkb.EasyElevator;
+package STtraveller.EasyElevator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import dzjkb.EasyElevator.Elevator;
+import STtraveller.EasyElevator.Elevator;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
