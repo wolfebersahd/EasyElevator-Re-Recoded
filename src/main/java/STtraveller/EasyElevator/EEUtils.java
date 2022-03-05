@@ -1,4 +1,4 @@
-package dzjkb.EasyElevator;
+package STtraveller.EasyElevator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;

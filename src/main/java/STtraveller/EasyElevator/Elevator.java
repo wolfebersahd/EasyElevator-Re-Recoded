@@ -1,4 +1,4 @@
-package dzjkb.EasyElevator;
+package STtraveller.EasyElevator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import dzjkb.EasyElevator.EEConfiguration;
+import STtraveller.EasyElevator.EEConfiguration;
 
 public class Elevator
         implements Runnable

@@ -1,4 +1,4 @@
-package dzjkb.EasyElevator;
+package STtraveller.EasyElevator;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -9,7 +9,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.Material;
 
-import dzjkb.EasyElevator.EEUtils;
+import STtraveller.EasyElevator.EEUtils;
 
 public class EEPlayerListener
         implements Listener
