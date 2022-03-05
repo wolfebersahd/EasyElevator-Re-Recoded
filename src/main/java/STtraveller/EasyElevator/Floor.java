@@ -77,13 +77,16 @@ public class Floor
             {
                 Block tempBlock = this.world.getBlockAt(x, this.l1.getBlockY() + 1, z);
                 if (x == xStart || x == xEnd || z == zStart || z == zEnd) {
-                    if (tempBlock.getType().equals(Material.ACACIA_DOOR) || 
+                    if (tempBlock.getType().equals(Material.ACACIA_DOOR) ||
                     	tempBlock.getType().equals(Material.BIRCH_DOOR) || 
                     	tempBlock.getType().equals(Material.DARK_OAK_DOOR) ||
                     	tempBlock.getType().equals(Material.JUNGLE_DOOR) ||
                     	tempBlock.getType().equals(Material.SPRUCE_DOOR) ||
                     	tempBlock.getType().equals(Material.IRON_DOOR) ||
-                        tempBlock.getType().equals(Material.OAK_DOOR))
+                        tempBlock.getType().equals(Material.OAK_DOOR) ||
+                        tempBlock.getType().equals(Material.CRIMSON_DOOR) ||
+                        tempBlock.getType().equals(Material.WARPED_DOOR)
+                    )
                         this.doorOpenBlock.add(tempBlock);
                 }
             }
