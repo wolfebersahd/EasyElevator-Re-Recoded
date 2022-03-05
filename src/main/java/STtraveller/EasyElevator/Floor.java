@@ -153,13 +153,11 @@ public class Floor
                     Block block = this.world.getBlockAt(x, this.l1.getBlockY(), z);
                     if (b && this.elevator.isOutputFloor(block)) {
                         this.outputFloorMat = block.getType();
-                        block.setType(Material.REDSTONE_TORCH);
-                        ((Lightable)block.getBlockData()).setLit(true);
+                        block.setType(Material.REDSTONE_BLOCK);
                         this.redstoneOutFloorBlock.add(block);
                     }
-                    else if (
-                        (this.elevator.isOutputFloor(block) || (block.getType().equals(Material.REDSTONE_TORCH) && ((Lightable)block.getBlockData()).isLit())) &&
-                             this.redstoneOutFloorBlock.contains(block)) {
+                    else if ((this.elevator.isOutputFloor(block) || (block.getType().equals(Material.REDSTONE_BLOCK))) &&
+                                this.redstoneOutFloorBlock.contains(block)) {
                         block.setType(this.outputFloorMat);
                         this.redstoneOutFloorBlock.remove(block);
                     }
