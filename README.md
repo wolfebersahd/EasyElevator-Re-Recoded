@@ -15,7 +15,7 @@ After the first run, a configuration file should appear in `plugins/EasyElevator
 
 # Configuration
 
-For available strings referring to Materials in the current version (1.12), visit [The PaperMC docs](https://papermc.io/javadocs/paper/1.12/org/bukkit/Material.html)
+For available strings referring to Materials in the current version (1.16), visit [The PaperMC docs](https://papermc.io/javadocs/paper/1.16/org/bukkit/Material.html)
 
 * `maxPerimeter` - Integer - maximum perimeter of a floor, expressed in the number of blocks present in the ring
 * `maxFloors` - Integer - maximum number of floors in a single elevator
@@ -24,6 +24,7 @@ For available strings referring to Materials in the current version (1.12), visi
 * `blocks.border` - String - Material to be used for the upper and lower elevator border
 * `blocks.floor` - String - Material to be used for rings designating floors
 * `blocks.outputFloor` - String - Material to be optionally used for floor rings, which will change to a redstone torch upon arrival (see tutorial)
+* `debug` - Boolean - whether to print debug log in console
 
 
 # Permissions
