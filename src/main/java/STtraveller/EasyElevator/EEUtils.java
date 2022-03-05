@@ -1,9 +1,9 @@
 package STtraveller.EasyElevator;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 
 public class EEUtils {
@@ -19,24 +19,10 @@ public class EEUtils {
     }
 
     public static boolean isSign(Block b) {
-        return b.getType().equals(Material.SPRUCE_SIGN) ||
-                b.getType().equals(Material.OAK_SIGN) ||
-                b.getType().equals(Material.JUNGLE_SIGN) ||
-                b.getType().equals(Material.BIRCH_SIGN) ||
-                b.getType().equals(Material.ACACIA_SIGN) ||
-                b.getType().equals(Material.DARK_OAK_SIGN) ||
-                b.getType().equals(Material.CRIMSON_SIGN) ||
-                b.getType().equals(Material.WARPED_SIGN);
+        return b.getBlockData() instanceof org.bukkit.block.data.type.Sign;
     }
 
     public static boolean isWallSign(Block b) {
-        return b.getType().equals(Material.SPRUCE_WALL_SIGN) ||
-                b.getType().equals(Material.OAK_WALL_SIGN) ||
-                b.getType().equals(Material.JUNGLE_WALL_SIGN) ||
-                b.getType().equals(Material.BIRCH_WALL_SIGN) ||
-                b.getType().equals(Material.ACACIA_WALL_SIGN) ||
-                b.getType().equals(Material.DARK_OAK_WALL_SIGN) ||
-                b.getType().equals(Material.CRIMSON_WALL_SIGN) ||
-                b.getType().equals(Material.WARPED_WALL_SIGN);
+        return b.getBlockData() instanceof WallSign;
     }
 }

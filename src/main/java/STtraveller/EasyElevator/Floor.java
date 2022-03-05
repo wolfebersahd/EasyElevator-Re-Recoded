@@ -13,9 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.block.data.Lightable;
-import org.bukkit.block.data.type.Door;
-import org.bukkit.material.MaterialData;
+import org.bukkit.block.data.Openable;
 
 
 
@@ -77,16 +75,7 @@ public class Floor
             {
                 Block tempBlock = this.world.getBlockAt(x, this.l1.getBlockY() + 1, z);
                 if (x == xStart || x == xEnd || z == zStart || z == zEnd) {
-                    if (tempBlock.getType().equals(Material.ACACIA_DOOR) ||
-                    	tempBlock.getType().equals(Material.BIRCH_DOOR) || 
-                    	tempBlock.getType().equals(Material.DARK_OAK_DOOR) ||
-                    	tempBlock.getType().equals(Material.JUNGLE_DOOR) ||
-                    	tempBlock.getType().equals(Material.SPRUCE_DOOR) ||
-                    	tempBlock.getType().equals(Material.IRON_DOOR) ||
-                        tempBlock.getType().equals(Material.OAK_DOOR) ||
-                        tempBlock.getType().equals(Material.CRIMSON_DOOR) ||
-                        tempBlock.getType().equals(Material.WARPED_DOOR)
-                    )
+                    if (tempBlock.getBlockData() instanceof Openable)
                         this.doorOpenBlock.add(tempBlock);
                 }
             }
@@ -219,7 +208,7 @@ public class Floor
         try {
             for (Block block : this.doorOpenBlock) {
                 // BlockState bs = block.getState();
-                Door bd = (Door)block.getBlockData();
+                Openable bd = (Openable)block.getBlockData();
                 // Door d = (Door)bs.getData();
 
                 if (bd.isOpen() ^ open) {
