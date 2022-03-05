@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 
 import STtraveller.EasyElevator.EEConfiguration;
 
+import static STtraveller.EasyElevator.EEUtils.isWallSign;
+
 public class Elevator
         implements Runnable
 {
@@ -223,14 +225,7 @@ public class Elevator
             for (int x = xStart - 1; x <= xEnd + 1; ++x) {
                 for (int z = zStart - 1; z <= zEnd + 1; ++z) {
                     Block b = this.world.getBlockAt(x, y, z);
-                    if (
-                        (b.getType().equals(Material.SPRUCE_WALL_SIGN) ||
-                         b.getType().equals(Material.OAK_WALL_SIGN) ||
-                         b.getType().equals(Material.LEGACY_WALL_SIGN) ||
-                         b.getType().equals(Material.JUNGLE_WALL_SIGN) ||
-                         b.getType().equals(Material.BIRCH_WALL_SIGN) ||
-                         b.getType().equals(Material.ACACIA_WALL_SIGN) ||
-                         b.getType().equals(Material.DARK_OAK_WALL_SIGN)) &&
+                    if (isWallSign(b) &&
                         (x == xStart - 1 || x == xEnd + 1 || z == zStart - 1 || z == zEnd + 1)
                     ) {
                         return (Sign)b.getState();

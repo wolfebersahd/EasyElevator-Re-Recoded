@@ -13,4 +13,4 @@ blocks:
   border: "GOLD_BLOCK"
   floor: "IRON_BLOCK"
   outputFloor: "WHITE_WOOL"
-debug: true
+debug: false
