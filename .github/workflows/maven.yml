@@ -25,8 +25,8 @@ jobs:
       - name: Build
         run: |
           mvn package
-          mkdir staging/
-          cp target/SetHome-*.jar staging/
+          mkdir staging
+          cp target/EasyElevator-Re-Recoded.jar staging
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
