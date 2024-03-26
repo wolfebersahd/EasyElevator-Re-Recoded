@@ -26,7 +26,7 @@ jobs:
         run: |
           mvn package
           mkdir staging
-          cp target/EasyElevator-Re-Recoded.jar staging
+          cp target/EasyElevator-8.3.1-1.16.jar staging
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
