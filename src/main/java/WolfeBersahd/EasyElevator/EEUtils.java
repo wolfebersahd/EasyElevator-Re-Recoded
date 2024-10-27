@@ -1,4 +1,4 @@
-package STtraveller.EasyElevator;
+package WolfeBersahd.EasyElevator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;

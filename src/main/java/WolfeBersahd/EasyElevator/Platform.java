@@ -1,11 +1,11 @@
-package STtraveller.EasyElevator;
+package WolfeBersahd.EasyElevator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import java.lang.Math;
 
-import STtraveller.EasyElevator.EasyElevator;
+import WolfeBersahd.EasyElevator.EasyElevator;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

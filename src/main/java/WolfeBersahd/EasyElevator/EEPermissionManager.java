@@ -1,8 +1,8 @@
-package STtraveller.EasyElevator;
+package WolfeBersahd.EasyElevator;
 
 import org.bukkit.entity.Player;
 
-import STtraveller.EasyElevator.EEPermissions;
+import WolfeBersahd.EasyElevator.EEPermissions;
 
 public class EEPermissionManager
 {

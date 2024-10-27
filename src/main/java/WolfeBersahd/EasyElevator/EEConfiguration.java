@@ -1,4 +1,4 @@
-package STtraveller.EasyElevator;
+package WolfeBersahd.EasyElevator;
 
 /* Although unenforcable without loads of unnecessary boilerplate,
  * this class is to be treated as an immutable named tuple.

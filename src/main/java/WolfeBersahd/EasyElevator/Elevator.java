@@ -1,4 +1,4 @@
-package STtraveller.EasyElevator;
+package WolfeBersahd.EasyElevator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,9 +12,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import STtraveller.EasyElevator.EEConfiguration;
+import WolfeBersahd.EasyElevator.EEConfiguration;
 
-import static STtraveller.EasyElevator.EEUtils.isWallSign;
+import static WolfeBersahd.EasyElevator.EEUtils.isWallSign;
 
 public class Elevator
         implements Runnable

@@ -1,4 +1,4 @@
-package STtraveller.EasyElevator;
+package WolfeBersahd.EasyElevator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
@@ -7,9 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.block.Sign;
 
-import STtraveller.EasyElevator.EasyElevator;
-import STtraveller.EasyElevator.EEUtils;
-import STtraveller.EasyElevator.EEPermissions;
+import WolfeBersahd.EasyElevator.EasyElevator;
+import WolfeBersahd.EasyElevator.EEUtils;
+import WolfeBersahd.EasyElevator.EEPermissions;
 
 public class EECommands implements CommandExecutor {
 
@@ -25,7 +25,7 @@ public class EECommands implements CommandExecutor {
 
     private void help(Player p) {
         p.sendMessage(ChatColor.BLUE + "----------" + ChatColor.DARK_GRAY + "[EasyElevator]" + ChatColor.BLUE + "----------");
-        p.sendMessage(ChatColor.GOLD + "Proudly presented by " + ChatColor.AQUA + "ST" + ChatColor.GREEN + "traveller");
+        p.sendMessage(ChatColor.GOLD + "Proudly presented by " + ChatColor.GRAY + "WolfeBersahd");
         p.sendMessage(ChatColor.BLUE + "EasyElevator help");
         p.sendMessage("./elv help - shows this dialog");
         p.sendMessage("./elv reload - reload the config");

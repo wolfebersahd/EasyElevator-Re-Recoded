@@ -1,10 +1,10 @@
-package STtraveller.EasyElevator;
+package WolfeBersahd.EasyElevator;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import STtraveller.EasyElevator.EECommands;
-import STtraveller.EasyElevator.EEConfigurationManager;
-import STtraveller.EasyElevator.EEPlayerListener;
+import WolfeBersahd.EasyElevator.EECommands;
+import WolfeBersahd.EasyElevator.EEConfigurationManager;
+import WolfeBersahd.EasyElevator.EEPlayerListener;
 
 public class EasyElevator
         extends JavaPlugin

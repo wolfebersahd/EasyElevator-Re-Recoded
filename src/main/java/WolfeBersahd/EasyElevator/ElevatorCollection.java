@@ -1,4 +1,4 @@
-package STtraveller.EasyElevator;
+package WolfeBersahd.EasyElevator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-import STtraveller.EasyElevator.Elevator;
-import STtraveller.EasyElevator.EasyElevator;
-import STtraveller.EasyElevator.EEUtils;
+import WolfeBersahd.EasyElevator.Elevator;
+import WolfeBersahd.EasyElevator.EasyElevator;
+import WolfeBersahd.EasyElevator.EEUtils;
 
-import static STtraveller.EasyElevator.EEUtils.isSign;
-import static STtraveller.EasyElevator.EEUtils.isWallSign;
+import static WolfeBersahd.EasyElevator.EEUtils.isSign;
+import static WolfeBersahdr.EasyElevator.EEUtils.isWallSign;
 
 public class ElevatorCollection
 {

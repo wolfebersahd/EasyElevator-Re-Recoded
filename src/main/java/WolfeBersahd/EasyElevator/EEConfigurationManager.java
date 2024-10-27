@@ -1,10 +1,10 @@
-package STtraveller.EasyElevator;
+package WolfeBersahd.EasyElevator;
 
 import java.io.File;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import STtraveller.EasyElevator.EEConfiguration;
+import WolfeBersahd.EasyElevator.EEConfiguration;
 
 public class EEConfigurationManager
 {

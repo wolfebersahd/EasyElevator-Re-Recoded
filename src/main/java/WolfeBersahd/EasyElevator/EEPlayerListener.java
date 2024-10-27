@@ -1,4 +1,4 @@
-package STtraveller.EasyElevator;
+package WolfeBersahd.EasyElevator;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
