@@ -9,9 +9,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.Material;
 
-import STtraveller.EasyElevator.EEUtils;
+import WolfeBersahd.EasyElevator.EEUtils;
 
-import static STtraveller.EasyElevator.EEUtils.isWallSign;
+import static WolfeBersahd.EasyElevator.EEUtils.isWallSign;
 
 public class EEPlayerListener
         implements Listener
