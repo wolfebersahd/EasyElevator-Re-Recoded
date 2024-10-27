@@ -15,7 +15,7 @@ import WolfeBersahd.EasyElevator.EasyElevator;
 import WolfeBersahd.EasyElevator.EEUtils;
 
 import static WolfeBersahd.EasyElevator.EEUtils.isSign;
-import static WolfeBersahdr.EasyElevator.EEUtils.isWallSign;
+import static WolfeBersahd.EasyElevator.EEUtils.isWallSign;
 
 public class ElevatorCollection
 {
